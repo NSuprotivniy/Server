@@ -2,11 +2,11 @@ package edu.technopolis;
 
 import java.net.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.xml.bind.DatatypeConverter;
-import java.security.MessageDigest;
+
 
 /**
  * Created by nsuprotivniy on 24.01.17.
@@ -69,6 +69,7 @@ public class Server {
             try {
                 InputStream in = client.getInputStream();
                 OutputStream out = client.getOutputStream();
+                JSONHandler jsonHandler = new JSONHandler();
 
                 while (true) {
                     String data = new Scanner(in, "UTF-8").useDelimiter("\\r\\n\\r\\n").next();
@@ -76,7 +77,8 @@ public class Server {
 
                     Matcher exit = Pattern.compile("exit").matcher(data);
                     if (exit.find()) break;
-
+                    
+                    data = jsonHandler.readFile("data.json", StandardCharsets.UTF_8);
                     byte[] response = data.getBytes("UTF-8");
 
                     out.write(response, 0, response.length);
