@@ -13,9 +13,6 @@ import java.util.regex.Pattern;
  */
 public class Server {
 
-
-
-
     Server(int port) {
         ServerSocket server;
 
@@ -31,7 +28,7 @@ public class Server {
 
 
         } catch (IOException e) {
-            System.out.println("Couldn't listen to port 4444");
+            System.out.println("Couldn't listen to port " + port);
             e.printStackTrace();
         }
 
@@ -77,7 +74,7 @@ public class Server {
 
                     Matcher exit = Pattern.compile("exit").matcher(data);
                     if (exit.find()) break;
-                    
+
                     data = jsonHandler.readFile("data.json", StandardCharsets.UTF_8);
                     byte[] response = data.getBytes("UTF-8");
 
@@ -96,6 +93,6 @@ public class Server {
 
 
     public static void main(String[] args) {
-        Server server = new Server(8080);
+        Server server = new Server(8000);
     }
 }

@@ -1,8 +1,6 @@
 package edu.technopolis;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
+import javax.json.*;
 import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -35,7 +33,27 @@ public class JSONHandler {
         JsonObject personObject = reader.readObject();
         reader.close();
 
-        System.out.println("body");
-        System.out.println(personObject.getString("body"));
+
+        System.out.println(personObject.getString("table"));
+        JsonObject fields = personObject.getJsonObject("fields");
+
+        fields.forEach((s, jsonValue) -> {
+            System.out.println(s);
+            System.out.println(jsonValue.toString());
+
+        });
+
+        JsonObject content = Json.createObjectBuilder()
+                .add("title", "Lorem Ipsum")
+                .add("author", "Noname")
+                .add("body", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit.")
+                .build();
+
+        content.forEach((s, jsonValue) -> {
+            System.out.println(s);
+            content.getString(s);
+        });
+
+
     }
 }
