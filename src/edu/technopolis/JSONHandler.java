@@ -12,7 +12,6 @@ import java.nio.file.Paths;
  */
 public class JSONHandler {
 
-
     public String readFile(String path, Charset encoding) {
         try {
             byte[] encoded = Files.readAllBytes(Paths.get(path));

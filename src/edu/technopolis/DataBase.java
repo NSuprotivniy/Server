@@ -19,6 +19,17 @@ public class DataBase {
     public static Statement statement;
     public static ResultSet resultSet;
 
+    DataBase(String path, JsonObject table) {
+        try {
+            connect(path);
+            create(table);
+        } catch (Exception e) {
+            System.out.println("Connection error");
+            e.printStackTrace();
+        }
+
+    }
+
     // DataBase connection
     public void connect(String path) throws ClassNotFoundException, SQLException
     {
@@ -146,9 +157,8 @@ public class DataBase {
     }
 
     public static void main(String[] args) {
-        DataBase db = new DataBase();
+
         try {
-            db.connect("Post.db");
 
             JsonObject fields = Json.createObjectBuilder()
                     .add("title", "VARCHAR(255)")
@@ -159,7 +169,8 @@ public class DataBase {
                     .add("table", "posts")
                     .add("fields", fields)
                     .build();
-            db.create(table);
+
+            DataBase db = new DataBase("DataBase/Post.db", table);
 
             JsonObject content = Json.createObjectBuilder()
                     .add("title", "Lorem Ipsum")

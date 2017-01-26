@@ -1,11 +1,16 @@
 package edu.technopolis;
 
+import jdk.nashorn.internal.parser.JSONParser;
+
+import javax.json.Json;
 import java.net.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 
 
 /**
@@ -38,9 +43,12 @@ public class Server {
     private class SocketProcessor implements Runnable {
 
         Socket client;
+        PostsHandler postsHandler;
 
         SocketProcessor(Socket client) {
+
             this.client = client;
+            this.postsHandler = new PostsHandler();
         }
 
         public void run() {
@@ -66,21 +74,21 @@ public class Server {
             try {
                 InputStream in = client.getInputStream();
                 OutputStream out = client.getOutputStream();
-                JSONHandler jsonHandler = new JSONHandler();
 
                 while (true) {
-                    String data = new Scanner(in, "UTF-8").useDelimiter("\\r\\n\\r\\n").next();
-                    System.out.println(data);
+                    String request = new Scanner(in, "UTF-8").useDelimiter("\\r\\n\\r\\n").next();
+                    System.out.println(request);
 
-                    Matcher exit = Pattern.compile("exit").matcher(data);
-                    if (exit.find()) break;
+                    //request = "{\"cmd\": \"find_post\",\"content\": {\"author\": \"Noname\"}}";
 
-                    data = jsonHandler.readFile("data.json", StandardCharsets.UTF_8);
-                    byte[] response = data.getBytes("UTF-8");
+                    JsonObject result = handleRequest(request);
 
-                    out.write(response, 0, response.length);
-
-                    out.flush();
+                    if (result != null) {
+                        System.out.println(result.toString());
+                        byte[] response = result.toString().getBytes("UTF-8");
+                        out.write(response, 0, response.length);
+                        out.flush();
+                    }
                 }
 
 
@@ -89,10 +97,39 @@ public class Server {
                 e.printStackTrace();
             }
         }
+
+        private JsonObject handleRequest(String request) {
+            JsonObject commandJSON;
+
+            try {
+                JsonReader reader =  Json.createReader(new StringReader(request));
+                commandJSON = reader.readObject();
+            } catch (Exception e) {
+                System.out.println("Parse error");
+                e.printStackTrace();
+                return null;
+            }
+
+
+            try {
+                String command = commandJSON.getString("cmd");
+
+                switch (command) {
+                    case "find_post": return postsHandler.find(commandJSON.getJsonObject("content"));
+                    default: return null;
+                }
+
+
+            } catch (Exception e) {
+                System.out.println("Error while reading json command");
+                e.printStackTrace();
+                return null;
+            }
+        }
     }
 
 
     public static void main(String[] args) {
-        Server server = new Server(8000);
+        Server server = new Server(8090);
     }
 }
