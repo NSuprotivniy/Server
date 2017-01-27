@@ -72,25 +72,27 @@ public class Server {
         private void listenForClient() throws Throwable {
 
             try {
-                InputStream in = client.getInputStream();
-                OutputStream out = client.getOutputStream();
+                BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                PrintWriter out = new PrintWriter(client.getOutputStream(), true);
+                String request;
 
-                while (true) {
-                    String request = new Scanner(in, "UTF-8").useDelimiter("\\r\\n\\r\\n").next();
+                while ((request = in.readLine()) != null) {
                     System.out.println(request);
 
                     //request = "{\"cmd\": \"find_post\",\"content\": {\"author\": \"Noname\"}}";
 
                     JsonObject result = handleRequest(request);
 
+
+
                     if (result != null) {
                         System.out.println(result.toString());
-                        byte[] response = result.toString().getBytes("UTF-8");
-                        out.write(response, 0, response.length);
-                        out.flush();
+                        out.println(result.toString());
+                    } else {
+                        System.out.println("Connection disabled.");
+                        break;
                     }
                 }
-
 
             } catch (IOException e) {
                 System.out.println("Stream error");
@@ -107,7 +109,7 @@ public class Server {
             } catch (Exception e) {
                 System.out.println("Parse error");
                 e.printStackTrace();
-                return null;
+                return Json.createObjectBuilder().add("result", "unsuccessful").build();
             }
 
 
@@ -115,21 +117,24 @@ public class Server {
                 String command = commandJSON.getString("cmd");
 
                 switch (command) {
+                    case "exit": return null;
                     case "find_post": return postsHandler.find(commandJSON.getJsonObject("content"));
-                    default: return null;
+                    case "get_all_posts":  return postsHandler.get_all();
+                    case "save_post": return postsHandler.save(commandJSON.getJsonObject("content"));
+                    default: return Json.createObjectBuilder().add("result", "unsuccessful").build();
                 }
 
 
             } catch (Exception e) {
                 System.out.println("Error while reading json command");
                 e.printStackTrace();
-                return null;
+                return Json.createObjectBuilder().add("result", "unsuccessful").build();
             }
         }
     }
 
 
     public static void main(String[] args) {
-        Server server = new Server(8090);
+        Server server = new Server(8080);
     }
 }

@@ -34,14 +34,60 @@ public class PostsHandler {
                     .add("clause", clause)
                     .build();
 
-            return db.find(query);
+            JsonObject content = db.find(query);
+
+            JsonObject result = Json.createObjectBuilder()
+                    .add("result", "successful")
+                    .add("content", content)
+                    .build();
+            return result;
 
         } catch (Exception e) {
             System.out.println("Can't find the post");
             e.printStackTrace();
+            return Json.createObjectBuilder().add("result", "unsuccessful").build();
         }
-        return null;
     }
+
+    public JsonObject get_all() {
+        try {
+            JsonObject query = Json.createObjectBuilder()
+                    .add("table", "posts")
+                    .add("clause", Json.createObjectBuilder().build())
+                    .build();
+
+            JsonObject content = db.find(query);
+            JsonObject result = Json.createObjectBuilder()
+                    .add("result", "successful")
+                    .add("content", content)
+                    .build();
+            return result;
+
+        } catch (Exception e) {
+            System.out.println("Can't find posts");
+            e.printStackTrace();
+            return Json.createObjectBuilder().add("result", "unsuccessful").build();
+        }
+    }
+
+    public JsonObject save(JsonObject content) {
+        try {
+            JsonObject query = Json.createObjectBuilder()
+                    .add("table", "posts")
+                    .add("content", content)
+                    .build();
+
+            return Json.createObjectBuilder().add("result", "successful").build();
+
+        } catch (Exception e) {
+            System.out.println("Can't save the post");
+            e.printStackTrace();
+            return Json.createObjectBuilder().add("result", "unsuccessful").build();
+        }
+
+    }
+
+
 
 
 }
