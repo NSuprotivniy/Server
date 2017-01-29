@@ -1,14 +1,8 @@
 package edu.technopolis;
 
-import jdk.nashorn.internal.parser.JSONParser;
-
 import javax.json.Json;
 import java.net.*;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 
@@ -31,13 +25,10 @@ public class Server {
                 new Thread( new SocketProcessor(client) ).start();
             }
 
-
         } catch (IOException e) {
             System.out.println("Couldn't listen to port " + port);
             e.printStackTrace();
         }
-
-
     }
 
     private class SocketProcessor implements Runnable {
@@ -48,7 +39,7 @@ public class Server {
         SocketProcessor(Socket client) {
 
             this.client = client;
-            this.postsHandler = new PostsHandler();
+            this.postsHandler = PostsHandler.getInstance();
         }
 
         public void run() {
@@ -65,7 +56,6 @@ public class Server {
                     System.out.println("Can't close client");
                     t.printStackTrace();
                 }
-
             }
         }
 
@@ -83,15 +73,14 @@ public class Server {
 
                     JsonObject result = handleRequest(request);
 
-
-
-                    if (result != null) {
-                        System.out.println(result.toString());
-                        out.println(result.toString());
-                    } else {
+                    if (result == null) {
                         System.out.println("Connection disabled.");
                         break;
                     }
+
+                    System.out.println(result.toString());
+                    out.println(result.toString());
+
                 }
 
             } catch (IOException e) {
@@ -112,12 +101,12 @@ public class Server {
                 return Json.createObjectBuilder().add("result", "unsuccessful").build();
             }
 
-
             try {
                 String command = commandJSON.getString("cmd");
 
                 switch (command) {
                     case "exit": return null;
+                    case "subscribe_posts": return subscribePosts();
                     case "find_post": return postsHandler.find(commandJSON.getJsonObject("content"));
                     case "get_all_posts":  return postsHandler.get_all();
                     case "save_post": return postsHandler.save(commandJSON.getJsonObject("content"));
@@ -129,6 +118,18 @@ public class Server {
                 System.out.println("Error while reading json command");
                 e.printStackTrace();
                 return Json.createObjectBuilder().add("result", "unsuccessful").build();
+            }
+        }
+
+        private JsonObject subscribePosts() {
+            try {
+                PostSubscriber subscriber = new PostSubscriber(client);
+                postsHandler.addSubscriber(subscriber);
+                return JSONHandler.generateAnswer("subscribe_posts", null, true);
+            } catch (Exception e) {
+                System.out.println("Can't create subscriber");
+                e.printStackTrace();
+                return JSONHandler.generateAnswer("subscribe_posts", null, false);
             }
         }
     }

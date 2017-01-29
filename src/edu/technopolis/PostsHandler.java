@@ -2,13 +2,19 @@ package edu.technopolis;
 
 import javax.json.Json;
 import javax.json.JsonObject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by nsuprotivniy on 26.01.17.
  */
 public class PostsHandler {
 
+    private static final PostsHandler INSTANCE = new PostsHandler();
+
     DataBase db;
+    List<PostSubscriber> subscribers;
+
 
     PostsHandler() {
         String db_path = "DataBase/Post.db";
@@ -24,6 +30,12 @@ public class PostsHandler {
                 .build();
 
         db = new DataBase(db_path, table);
+
+         subscribers = new ArrayList<>();
+    }
+
+    public static PostsHandler getInstance() {
+        return INSTANCE;
     }
 
     public JsonObject find(JsonObject clause) {
@@ -36,16 +48,12 @@ public class PostsHandler {
 
             JsonObject content = db.find(query);
 
-            JsonObject result = Json.createObjectBuilder()
-                    .add("result", "successful")
-                    .add("content", content)
-                    .build();
-            return result;
+            return JSONHandler.generateAnswer("find_post", content, true);
 
         } catch (Exception e) {
             System.out.println("Can't find the post");
             e.printStackTrace();
-            return Json.createObjectBuilder().add("result", "unsuccessful").build();
+            return JSONHandler.generateAnswer("find_post", clause, true);
         }
     }
 
@@ -57,16 +65,13 @@ public class PostsHandler {
                     .build();
 
             JsonObject content = db.find(query);
-            JsonObject result = Json.createObjectBuilder()
-                    .add("result", "successful")
-                    .add("content", content)
-                    .build();
-            return result;
+
+            return JSONHandler.generateAnswer("get_all_posts", content, true);
 
         } catch (Exception e) {
             System.out.println("Can't find posts");
             e.printStackTrace();
-            return Json.createObjectBuilder().add("result", "unsuccessful").build();
+            return JSONHandler.generateAnswer("get_all_posts", null, false);
         }
     }
 
@@ -77,17 +82,29 @@ public class PostsHandler {
                     .add("content", content)
                     .build();
 
-            return Json.createObjectBuilder().add("result", "successful").build();
+            db.save(query);
+
+            eventBroadcast(content);
+
+            return JSONHandler.generateAnswer("save_post", content, true);
 
         } catch (Exception e) {
             System.out.println("Can't save the post");
             e.printStackTrace();
-            return Json.createObjectBuilder().add("result", "unsuccessful").build();
+            return JSONHandler.generateAnswer("save_post", content, false);
         }
 
     }
 
+    private void eventBroadcast(JsonObject post) {
 
+        for (PostSubscriber subscriber : subscribers) {
+            subscriber.handle_event(post);
+        }
+    }
 
+    public void addSubscriber(PostSubscriber subscriber) {
+        subscribers.add(subscriber);
+    }
 
 }

@@ -12,35 +12,50 @@ import java.nio.file.Paths;
  */
 public class JSONHandler {
 
-    public String readFile(String path, Charset encoding) {
-        try {
-            byte[] encoded = Files.readAllBytes(Paths.get(path));
-            return new String(encoded, encoding);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static JsonObject generateAnswer(String cmd, JsonObject content, boolean success) {
 
-        return null;
+        String status = success ? "successful" : "unsuccessful";
+        if (content == null) content = Json.createObjectBuilder().build();
+
+        JsonObject answer = Json.createObjectBuilder()
+                .add("cmd", cmd)
+                .add("result", status)
+                .add("content", content)
+                .build();
+
+        return answer;
     }
+
+
+//    public String readFile(String path, Charset encoding) {
+//        try {
+//            byte[] encoded = Files.readAllBytes(Paths.get(path));
+//            return new String(encoded, encoding);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        return null;
+//    }
 
     public static void main(String[] args) {
 
-        JSONHandler jsonHandler = new JSONHandler();
-
-        String data = jsonHandler.readFile("data.json", StandardCharsets.UTF_8);
-        JsonReader reader = Json.createReader(new StringReader(data));
-        JsonObject personObject = reader.readObject();
-        reader.close();
-
-
-        System.out.println(personObject.getString("table"));
-        JsonObject fields = personObject.getJsonObject("fields");
-
-        fields.forEach((s, jsonValue) -> {
-            System.out.println(s);
-            System.out.println(jsonValue.toString());
-
-        });
+//        JSONHandler jsonHandler = new JSONHandler();
+//
+//        String data = jsonHandler.readFile("data.json", StandardCharsets.UTF_8);
+//        JsonReader reader = Json.createReader(new StringReader(data));
+//        JsonObject personObject = reader.readObject();
+//        reader.close();
+//
+//
+//        System.out.println(personObject.getString("table"));
+//        JsonObject fields = personObject.getJsonObject("fields");
+//
+//        fields.forEach((s, jsonValue) -> {
+//            System.out.println(s);
+//            System.out.println(jsonValue.toString());
+//
+//        });
 
         JsonObject content = Json.createObjectBuilder()
                 .add("title", "Lorem Ipsum")
