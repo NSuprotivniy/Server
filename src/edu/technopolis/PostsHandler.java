@@ -75,6 +75,29 @@ public class PostsHandler {
         }
     }
 
+    public JsonObject get_last_posts(JsonObject period) {
+        try {
+
+            String clause = "created_at >= DATE('now', '-" +
+                    period.getString("amount") + " " +
+                    period.getString("period") + "')";
+
+            JsonObject query = Json.createObjectBuilder()
+                    .add("table", "posts")
+                    .add("clause", clause)
+                    .build();
+
+            JsonObject result = db.where(query);
+
+            return JSONHandler.generateAnswer("get_last_posts", result, true);
+
+        } catch (Exception e) {
+            System.out.println("Can't find posts");
+            e.printStackTrace();
+            return JSONHandler.generateAnswer("get_last_posts", period, false);
+        }
+    }
+
     public JsonObject save(JsonObject content) {
         try {
             JsonObject query = Json.createObjectBuilder()

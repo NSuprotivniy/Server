@@ -109,6 +109,7 @@ public class Server {
                     case "subscribe_posts": return subscribePosts();
                     case "find_post": return postsHandler.find(commandJSON.getJsonObject("content"));
                     case "get_all_posts":  return postsHandler.get_all();
+                    case "get_last_posts": return postsHandler.get_last_posts(commandJSON.getJsonObject("content"));
                     case "save_post": return postsHandler.save(commandJSON.getJsonObject("content"));
                     default: return Json.createObjectBuilder().add("result", "unsuccessful").build();
                 }

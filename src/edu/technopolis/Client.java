@@ -44,6 +44,7 @@ public class Client {
                             "2 - get all posts\n" +
                             "3 - save post\n" +
                             "4 - subscribe posts\n" +
+                            "5 - get last posts\n" +
                             "9 - exit\n"
             );
 
@@ -64,6 +65,9 @@ public class Client {
                         break;
                     case 4:
                         request = "{\"cmd\": \"subscribe_posts\", \"content\": {}}";
+                        break;
+                    case 5:
+                        request = "{\"cmd\": \"get_last_posts\", \"content\": {\"period\": \"day\", \"amount\": \"7\"}}";
                         break;
                     default:
                         request = "{\"cmd\": \"exit\",\"content\": {}}";

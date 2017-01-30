@@ -58,6 +58,7 @@ public class DataBase {
             query.append(", '" + field + "' " + fields.getString(field));
         });
 
+        query.append(", created_at DATE DEFAULT (datetime('now','localtime'))");
         query.append(");");
 
         System.out.println(query.toString());
@@ -87,6 +88,7 @@ public class DataBase {
             values.append("" + value + ", ");
 
         });
+
         fields.delete(fields.length() - 2, fields.length() - 1);
         values.delete(values.length() - 2, values.length() - 1);
         fields.append(")");
@@ -108,19 +110,22 @@ public class DataBase {
     }
 
     // Records searching
-    public JsonObject find(JsonObject clause) throws ClassNotFoundException, SQLException
+    public JsonObject where(JsonObject search_params) throws ClassNotFoundException, SQLException
+    {
+        return where(search_params.getString("table"), search_params.getString("clause"));
+    }
+
+    // Records searching
+    private JsonObject where(String table, String clause) throws ClassNotFoundException, SQLException
     {
         StringBuilder query = new StringBuilder();
 
-        query.append("SELECT * FROM " + clause.getString("table") + " ");
-        query.append("WHERE ");
+        query.append("SELECT * FROM " + table + " ");
 
-        clause = clause.getJsonObject("clause");
-
-        clause.forEach((field, value) -> {
-            query.append(field + "=" + value + " AND ");
-        });
-        query.delete(query.length() - 5, query.length() - 1);
+        if (!clause.isEmpty()) {
+            query.append("WHERE ");
+            query.append(clause);
+        }
 
         System.out.println(query.toString());
 
@@ -140,11 +145,31 @@ public class DataBase {
             result.add(resultSet.getString(1), record.build());
         }
 
+        //statement.execute("SELECT * FROM posts WHERE author='Noname'");
+
         System.out.println("Record found");
 
         return result.build();
-
     }
+
+    // Records searching
+    public JsonObject find(JsonObject search_params) throws ClassNotFoundException, SQLException
+    {
+        String table = search_params.getString("table");
+        StringBuilder clause = new StringBuilder();
+        search_params = search_params.getJsonObject("clause");
+
+        if (!search_params.isEmpty()) {
+            search_params.forEach((field, value) -> {
+                clause.append(field + "=" + value + " AND ");
+            });
+            clause.delete(clause.length() - 5, clause.length() - 1);
+        }
+
+        return where(table, clause.toString());
+    }
+
+
 
     // Close the connection
     public void close() throws ClassNotFoundException, SQLException
@@ -174,7 +199,7 @@ public class DataBase {
 
             JsonObject content = Json.createObjectBuilder()
                     .add("title", "Lorem Ipsum")
-                    .add("author", "Noname")
+                    .add("author", "Marcus Tullius Cicero")
                     .add("body", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit.")
                     .build();
             JsonObject record = Json.createObjectBuilder()
