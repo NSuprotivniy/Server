@@ -52,7 +52,7 @@ public class Client {
 
                 switch (sc.nextInt()) {
                     case 0:
-                        request = "{\"cmd\": \"find_post\",\"content\": {\"author\": \"Noname\"}}";
+                        request = "{\"cmd\": \"find_post\",\"content\": {\"author\": \"Marcus Tullius Cicero\"}}";
                         break;
                     case 1:
                         request = "{\"cmd\": \"find_post\",\"content\": {\"title\": \"Lorem Ipsum\"}}";
@@ -61,13 +61,13 @@ public class Client {
                         request = "{\"cmd\": \"get_all_posts\",\"content\": {}}";
                         break;
                     case 3:
-                        request = "{\"cmd\": \"save_post\",\"content\": {\"title\": \"Lorem Ipsum\",\"author\": \"Noname\",\"body\": \"Lorem ipsum dolor sit amet, consectetuer adipiscing elit.\"}}";
+                        request = "{\"cmd\": \"save_post\",\"content\": {\"title\": \"Lorem Ipsum\",\"author\": \"Marcus Tullius Cicero\",\"body\": \"Lorem ipsum dolor sit amet, consectetuer adipiscing elit.\"}}";
                         break;
                     case 4:
                         request = "{\"cmd\": \"subscribe_posts\", \"content\": {}}";
                         break;
                     case 5:
-                        request = "{\"cmd\": \"get_last_posts\", \"content\": {\"period\": \"day\", \"amount\": \"7\"}}";
+                        request = "{\"cmd\": \"getLastPosts\", \"content\": {\"period\": \"day\", \"amount\": \"7\"}}";
                         break;
                     default:
                         request = "{\"cmd\": \"exit\",\"content\": {}}";

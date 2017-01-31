@@ -12,6 +12,20 @@ import javax.json.*;
  */
 public class JSONHandler {
 
+    public static JsonObject generateAnswer(String cmd, JsonArray content, boolean success) {
+
+        String status = success ? "successful" : "unsuccessful";
+        if (content == null) content = Json.createArrayBuilder().build();
+
+        JsonObject answer = Json.createObjectBuilder()
+                .add("cmd", cmd)
+                .add("status", status)
+                .add("content", content)
+                .build();
+
+        return answer;
+    }
+
     public static JsonObject generateAnswer(String cmd, JsonObject content, boolean success) {
 
         String status = success ? "successful" : "unsuccessful";
@@ -19,12 +33,14 @@ public class JSONHandler {
 
         JsonObject answer = Json.createObjectBuilder()
                 .add("cmd", cmd)
-                .add("result", status)
+                .add("status", status)
                 .add("content", content)
                 .build();
 
         return answer;
     }
+
+
 
 
 //    public String readFile(String path, Charset encoding) {

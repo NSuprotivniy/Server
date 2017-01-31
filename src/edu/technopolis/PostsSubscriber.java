@@ -8,12 +8,12 @@ import java.net.Socket;
 /**
  * Created by nsuprotivniy on 28.01.17.
  */
-public class PostSubscriber {
+public class PostsSubscriber {
 
-    Socket socket;
-    PrintWriter out;
+    private Socket socket;
+    private PrintWriter out;
 
-    PostSubscriber(Socket socket){
+    PostsSubscriber(Socket socket){
         this.socket = socket;
         try {
             this.out = new PrintWriter(socket.getOutputStream(), true);

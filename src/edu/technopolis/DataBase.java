@@ -1,8 +1,6 @@
 package edu.technopolis;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import javax.json.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -27,7 +25,16 @@ public class DataBase {
             System.out.println("Connection error");
             e.printStackTrace();
         }
+    }
 
+    DataBase(String path) {
+        try {
+            connect(path);
+            statement = connection.createStatement();
+        } catch (Exception e) {
+            System.out.println("Connection error");
+            e.printStackTrace();
+        }
     }
 
     // DataBase connection
@@ -71,7 +78,7 @@ public class DataBase {
     }
 
     // Record saving
-    public void save(JsonObject record) throws SQLException
+    public JsonArray save(JsonObject record) throws SQLException
     {
         StringBuilder query = new StringBuilder();
         StringBuilder fields = new StringBuilder();
@@ -102,21 +109,23 @@ public class DataBase {
 
         statement.execute(query.toString());
 
-
         //statement.execute("INSERT INTO 'users' ('name', 'phone') VALUES ('Petya', 125453); ");
 
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM " + record.getString("table") + " where id=last_insert_rowid();");
 
         System.out.println("Record saved.");
+
+        return ResultSetToJsonArray(resultSet);
     }
 
     // Records searching
-    public JsonObject where(JsonObject search_params) throws ClassNotFoundException, SQLException
+    public JsonArray where(JsonObject search_params) throws ClassNotFoundException, SQLException
     {
         return where(search_params.getString("table"), search_params.getString("clause"));
     }
 
     // Records searching
-    private JsonObject where(String table, String clause) throws ClassNotFoundException, SQLException
+    private JsonArray where(String table, String clause) throws ClassNotFoundException, SQLException
     {
         StringBuilder query = new StringBuilder();
 
@@ -129,31 +138,20 @@ public class DataBase {
 
         System.out.println(query.toString());
 
-        resultSet = statement.executeQuery(query.toString());
+        ResultSet resultSet = statement.executeQuery(query.toString());
 
-        JsonObjectBuilder result = Json.createObjectBuilder();
+        JsonArray result = ResultSetToJsonArray(resultSet);
 
-        while(resultSet.next()) {
-            JsonObjectBuilder record = Json.createObjectBuilder();
-            ResultSetMetaData rsmd = resultSet.getMetaData();
-
-
-            for (int i = 2; i <= rsmd.getColumnCount(); i++) {
-                record.add(rsmd.getColumnName(i), resultSet.getString(i));
-            }
-
-            result.add(resultSet.getString(1), record.build());
-        }
-
+        resultSet.close();
         //statement.execute("SELECT * FROM posts WHERE author='Noname'");
 
         System.out.println("Record found");
 
-        return result.build();
+        return result;
     }
 
     // Records searching
-    public JsonObject find(JsonObject search_params) throws ClassNotFoundException, SQLException
+    public JsonArray find(JsonObject search_params) throws ClassNotFoundException, SQLException
     {
         String table = search_params.getString("table");
         StringBuilder clause = new StringBuilder();
@@ -169,6 +167,11 @@ public class DataBase {
         return where(table, clause.toString());
     }
 
+    // Remove all records
+    public void clear(String table) throws ClassNotFoundException, SQLException
+    {
+        statement.execute("DELETE from " + table);
+    }
 
 
     // Close the connection
@@ -179,6 +182,25 @@ public class DataBase {
         resultSet.close();
 
         System.out.println("Connection closed.");
+    }
+
+    private JsonArray ResultSetToJsonArray(ResultSet resultSet) throws SQLException
+    {
+        JsonArrayBuilder records = Json.createArrayBuilder();
+
+        while(resultSet.next()) {
+            JsonObjectBuilder record = Json.createObjectBuilder();
+            ResultSetMetaData rsmd = resultSet.getMetaData();
+
+
+            for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+                record.add(rsmd.getColumnName(i), resultSet.getString(i));
+            }
+
+            records.add(record.build());
+        }
+
+        return records.build();
     }
 
     public static void main(String[] args) {
@@ -217,12 +239,12 @@ public class DataBase {
                     .add("clause", clause)
                     .build();
 
-            JsonObject result = db.find(query);
+            JsonArray result = db.find(query);
 
-            result.forEach((id, row) -> {
-                System.out.println(id);
+            for (JsonValue row : result) {
                 System.out.println(row);
-            });
+            }
+
 
             db.close();
 

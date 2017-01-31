@@ -1,6 +1,7 @@
 package edu.technopolis;
 
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +13,8 @@ public class PostsHandler {
 
     private static final PostsHandler INSTANCE = new PostsHandler();
 
-    DataBase db;
-    List<PostSubscriber> subscribers;
+    private DataBase db;
+    private List<PostsSubscriber> subscribers;
 
 
     PostsHandler() {
@@ -46,7 +47,7 @@ public class PostsHandler {
                     .add("clause", clause)
                     .build();
 
-            JsonObject content = db.find(query);
+            JsonArray content = db.find(query);
 
             return JSONHandler.generateAnswer("find_post", content, true);
 
@@ -57,25 +58,25 @@ public class PostsHandler {
         }
     }
 
-    public JsonObject get_all() {
+    public JsonObject getAll() {
         try {
             JsonObject query = Json.createObjectBuilder()
                     .add("table", "posts")
                     .add("clause", Json.createObjectBuilder().build())
                     .build();
 
-            JsonObject content = db.find(query);
+            JsonArray content = db.find(query);
 
             return JSONHandler.generateAnswer("get_all_posts", content, true);
 
         } catch (Exception e) {
             System.out.println("Can't find posts");
             e.printStackTrace();
-            return JSONHandler.generateAnswer("get_all_posts", null, false);
+            return JSONHandler.generateAnswer("get_all_posts", Json.createArrayBuilder().build(), false);
         }
     }
 
-    public JsonObject get_last_posts(JsonObject period) {
+    public JsonObject getLastPosts(JsonObject period) {
         try {
 
             String clause = "created_at >= DATE('now', '-" +
@@ -87,14 +88,14 @@ public class PostsHandler {
                     .add("clause", clause)
                     .build();
 
-            JsonObject result = db.where(query);
+            JsonArray result = db.where(query);
 
-            return JSONHandler.generateAnswer("get_last_posts", result, true);
+            return JSONHandler.generateAnswer("getLastPosts", result, true);
 
         } catch (Exception e) {
             System.out.println("Can't find posts");
             e.printStackTrace();
-            return JSONHandler.generateAnswer("get_last_posts", period, false);
+            return JSONHandler.generateAnswer("getLastPosts", period, false);
         }
     }
 
@@ -105,11 +106,11 @@ public class PostsHandler {
                     .add("content", content)
                     .build();
 
-            db.save(query);
+            JsonArray record = db.save(query);
 
             eventBroadcast(content);
 
-            return JSONHandler.generateAnswer("save_post", content, true);
+            return JSONHandler.generateAnswer("save_post", record, true);
 
         } catch (Exception e) {
             System.out.println("Can't save the post");
@@ -121,12 +122,12 @@ public class PostsHandler {
 
     private void eventBroadcast(JsonObject post) {
 
-        for (PostSubscriber subscriber : subscribers) {
+        for (PostsSubscriber subscriber : subscribers) {
             subscriber.handle_event(post);
         }
     }
 
-    public void addSubscriber(PostSubscriber subscriber) {
+    public void addSubscriber(PostsSubscriber subscriber) {
         subscribers.add(subscriber);
     }
 

@@ -4,7 +4,7 @@
 
 ## Description
 
-It realizes server-side job of Live Blog on Java. 
+It implements server-side job of Live Blog on Java. 
 
 ## API
 
@@ -26,22 +26,27 @@ Request
    "cmd":"save_post",
    "content":{  
       "title":"Lorem Ipsum",
-      "author":"Noname",
+      "author":"Marcus Tullius Cicero",
       "body":"Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
    }
 }
 ```
 
 Response 
-``` json
+{  
 {  
    "cmd":"save_post",
-   "result":"successful",
-   "content":{  
-      "title":"Lorem Ipsum",
-      "author":"Marcus Tullius Cicero",
-      "body":"Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
-   }
+   "status":"successful",
+   "content":[  
+      {  
+         "id":"1",
+         "title":"Lorem Ipsum",
+         "author":"Marcus Tullius Cicero",
+         "body":"Lorem ipsum dolor sit amet, consectetuer adipiscing elit.",
+         "created_at":"2017-01-30 23:40:11"
+      }
+   ]
+}
 }
 ```
 
@@ -61,27 +66,29 @@ Response
 ``` json
 {  
    "cmd":"get_all_posts",
-   "result":"successful",
-   "content":{  
-      "1":{  
+   "status":"successful",
+   "content":[  
+      {
+         "id":"1", 
          "title":"Lorem Ipsum",
          "author":"Marcus Tullius Cicero",
          "body":"Lorem ipsum dolor sit amet, consectetuer adipiscing elit.",
          "created_at":"2017-01-30 23:40:11"
       },
-      "2":{  
+      {
+         "id":"2",  
          "title":"Principles",
          "author":"Vangelis Bibakis",
          "body":"Now principles discovered off increasing how reasonably middletons men. Add seems out man met plate court sense. His joy she worth truth given. All year feet led view went sake. You agreeable breakfast his set perceived immediate. Stimulated man are projecting favourable middletons can cultivated.",
          "created_at":"2017-01-20 00:40:07"
       },
-      "3":{  
+      {  "id":"3",
          "title":"Delightful",
          "author":"Vangelis Bibakis",
          "body":"Delightful remarkably mr on announcing themselves entreaties favourable. About to in so terms voice at. Equal an would is found seems of. The particular friendship one sufficient terminated frequently themselves. It more shed went up is roof if loud case. Delay music in lived noise an. Beyond genius really enough passed is up. ",
          "created_at":"2017-01-20 00:41:24"
       }
-   }
+   ]
 }
 ```
 
@@ -103,7 +110,7 @@ Response
 ``` json
 {  
    "cmd":"subscribe_posts",
-   "result":"successful",
+   "status":"successful",
    "content":{}
 }
 ```
@@ -127,15 +134,16 @@ Response
 ``` json
 {  
    "cmd":"get_last_posts",
-   "result":"successful",
-   "content":{  
-      "1":{  
+   "status":"successful",
+   "content":[
+      {
+         "id":"1",  
          "title":"Lorem Ipsum",
          "author":"Marcus Tullius Cicero",
          "body":"Lorem ipsum dolor sit amet, consectetuer adipiscing elit.",
          "created_at":"2017-01-30 23:40:11"
       }   
-   }
+   ]
 } 
 ```
 
@@ -157,14 +165,15 @@ Response
 ``` json
 {  
    "cmd":"find_post",
-   "result":"successful",
-   "content":{  
-      "1":{  
+   "status":"successful",
+   "content":[
+      {
+         "id":"1",  
          "title":"Lorem Ipsum",
          "author":"Marcus Tullius Cicero",
          "body":"Lorem ipsum dolor sit amet, consectetuer adipiscing elit.",
          "created_at":"2017-01-30 23:18:58"
       }
-   }
+   ]
 }
 ```
