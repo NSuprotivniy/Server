@@ -1,6 +1,7 @@
 package edu.technopolis;
 
 import javax.json.*;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -8,14 +9,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSetMetaData;
 
+import java.util.concurrent.Semaphore;
+
 /**
  * Created by nsuprotivniy on 25.01.17.
  */
 public class DataBase {
 
-    public static Connection connection;
-    public static Statement statement;
-    public static ResultSet resultSet;
+    private Connection connection;
+    private Statement statement;
+    private Semaphore mutex = new Semaphore(1);
 
     DataBase(String path, JsonObject table) {
         try {
@@ -78,7 +81,7 @@ public class DataBase {
     }
 
     // Record saving
-    public JsonArray save(JsonObject record) throws SQLException
+    public JsonArray save(JsonObject record) throws SQLException, InterruptedException
     {
         StringBuilder query = new StringBuilder();
         StringBuilder fields = new StringBuilder();
@@ -107,11 +110,21 @@ public class DataBase {
 
         System.out.println(query.toString());
 
+        for(int j = 0; mutex.tryAcquire(); j++) {
+            if (j > 10) {
+                throw new InterruptedException("Can't acquire mutex.");
+            }
+            Thread.yield();
+        }
+
+
         statement.execute(query.toString());
 
         //statement.execute("INSERT INTO 'users' ('name', 'phone') VALUES ('Petya', 125453); ");
 
         ResultSet resultSet = statement.executeQuery("SELECT * FROM " + record.getString("table") + " where id=last_insert_rowid();");
+
+        mutex.release();
 
         System.out.println("Record saved.");
 
@@ -179,7 +192,6 @@ public class DataBase {
     {
         statement.close();
         connection.close();
-        resultSet.close();
 
         System.out.println("Connection closed.");
     }

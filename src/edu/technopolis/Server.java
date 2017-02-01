@@ -13,7 +13,7 @@ import javax.json.JsonReader;
 public class Server {
 
     Server(int port) {
-        ServerSocket server;
+        ServerSocket server = null;
 
         try {
             server = new ServerSocket(port);
@@ -27,7 +27,18 @@ public class Server {
 
         } catch (IOException e) {
             System.out.println("Couldn't listen to port " + port);
+            System.out.println(e.getMessage());
             e.printStackTrace();
+        } finally {
+            try {
+                server.close();
+            } catch (Exception e) {
+                System.out.println("Can't close server");
+                System.out.println(e.getMessage());
+                e.printStackTrace();
+            }
+
+
         }
     }
 
@@ -85,7 +96,11 @@ public class Server {
 
             } catch (IOException e) {
                 System.out.println("Stream error");
+                System.out.println(e.getMessage());
                 e.printStackTrace();
+            } finally {
+                client.close();
+                postsHandler.close();
             }
         }
 
@@ -97,6 +112,7 @@ public class Server {
                 commandJSON = reader.readObject();
             } catch (Exception e) {
                 System.out.println("Parse error");
+                System.out.println(e.getMessage());
                 e.printStackTrace();
                 return Json.createObjectBuilder().add("result", "unsuccessful").build();
             }
@@ -107,7 +123,7 @@ public class Server {
                 switch (command) {
                     case "exit": return null;
                     case "subscribe_posts": return subscribePosts();
-                    case "find_post": return postsHandler.find(commandJSON.getJsonObject("content"));
+                    case "find_posts": return postsHandler.find(commandJSON.getJsonObject("content"));
                     case "get_all_posts":  return postsHandler.getAll();
                     case "getLastPosts": return postsHandler.getLastPosts(commandJSON.getJsonObject("content"));
                     case "save_post": return postsHandler.save(commandJSON.getJsonObject("content"));
@@ -117,6 +133,7 @@ public class Server {
 
             } catch (Exception e) {
                 System.out.println("Error while reading json command");
+                System.out.println(e.getMessage());
                 e.printStackTrace();
                 return Json.createObjectBuilder().add("result", "unsuccessful").build();
             }
@@ -129,6 +146,7 @@ public class Server {
                 return JSONHandler.generateAnswer("subscribe_posts", Json.createObjectBuilder().build(), true);
             } catch (Exception e) {
                 System.out.println("Can't create subscriber");
+                System.out.println(e.getMessage());
                 e.printStackTrace();
                 return JSONHandler.generateAnswer("subscribe_posts", Json.createObjectBuilder().build(), false);
             }

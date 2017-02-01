@@ -1,6 +1,5 @@
 # Live Blog Server
 
----
 
 ## Description
 
@@ -14,6 +13,9 @@ You can connect to sever using preconfigured server address and port.
 For whole session you can use only one TCP connection to server.
 For communication you should send JSON formated string of command and query content.
 Responce formated with JSON too. 
+
+There are two status of query: successful and unsuccessful. You can catch unsuccessful status if
+there were any errors while server had been handling client's query.
 
 ### Examples of requests and responce format.
 
@@ -33,7 +35,8 @@ Request
 ```
 
 Response 
-{  
+
+``` json
 {  
    "cmd":"save_post",
    "status":"successful",
@@ -46,7 +49,6 @@ Response
          "created_at":"2017-01-30 23:40:11"
       }
    ]
-}
 }
 ```
 
@@ -149,13 +151,18 @@ Response
 
 #### Searching posts
 
+You can search any posts by title, author or body. 
+You can combine search parameters like in an example.
+If there are no posts to be found, server send successful response with empty array.
+
 Request
 
 ``` json
 {  
-   "cmd":"find_post",
+   "cmd":"find_posts,
    "content":{  
-      "title":"Lorem Ipsum"
+      "title":"Lorem Ipsum",
+      "author":"Marcus Tullius Cicero"
    }
 }
 ```
@@ -164,7 +171,7 @@ Response
 
 ``` json
 {  
-   "cmd":"find_post",
+   "cmd":"find_posts",
    "status":"successful",
    "content":[
       {

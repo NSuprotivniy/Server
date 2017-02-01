@@ -9,36 +9,53 @@ import java.util.List;
 /**
  * Created by nsuprotivniy on 26.01.17.
  */
+
 public class PostsHandler {
 
+    // Class is Singleton. It makes access to subscribers in one place
+    // and one connection to data base with serialized mode.
     private static final PostsHandler INSTANCE = new PostsHandler();
+    public static PostsHandler getInstance() { return INSTANCE; }
 
+    // Database with posts table.
     private DataBase db;
-    private List<PostsSubscriber> subscribers;
+
+    // List of clients who subscribed for new posts.
+    private List<PostsSubscriber> subscribers = new ArrayList<>();
 
 
     PostsHandler() {
+
         String db_path = "DataBase/Post.db";
 
-        JsonObject fields = Json.createObjectBuilder()
-                .add("title", "VARCHAR(255)")
-                .add("author", "VARCHAR(255)")
-                .add("body", "TEXT")
-                .build();
-        JsonObject table = Json.createObjectBuilder()
-                .add("table", "posts")
-                .add("fields", fields)
-                .build();
+        db = new DataBase(db_path);
 
-        db = new DataBase(db_path, table);
-
-         subscribers = new ArrayList<>();
+//        Now we delegate all manipulations with table from Server to administrator.
+//        So that's why we reject this.
+//        JsonObject fields = Json.createObjectBuilder()
+//                .add("title", "VARCHAR(255)")
+//                .add("author", "VARCHAR(255)")
+//                .add("body", "TEXT")
+//                .build();
+//        JsonObject table = Json.createObjectBuilder()
+//                .add("table", "posts")
+//                .add("fields", fields)
+//                .build();
+//
+//        db = new DataBase(db_path, table);
     }
 
-    public static PostsHandler getInstance() {
-        return INSTANCE;
+    public void close() {
+        try {
+            db.close();
+        } catch (Exception e) {
+            System.out.println("Can't close database connection");
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
     }
 
+    // Searching posts.
     public JsonObject find(JsonObject clause) {
         try {
 
@@ -49,15 +66,17 @@ public class PostsHandler {
 
             JsonArray content = db.find(query);
 
-            return JSONHandler.generateAnswer("find_post", content, true);
+            return JSONHandler.generateAnswer("find_posts", content, true);
 
         } catch (Exception e) {
-            System.out.println("Can't find the post");
+            System.out.println("Can't find posts");
+            System.out.println(e.getMessage());
             e.printStackTrace();
-            return JSONHandler.generateAnswer("find_post", clause, true);
+            return JSONHandler.generateAnswer("find_posts", clause, true);
         }
     }
 
+    // Getting all posts.
     public JsonObject getAll() {
         try {
             JsonObject query = Json.createObjectBuilder()
@@ -71,11 +90,13 @@ public class PostsHandler {
 
         } catch (Exception e) {
             System.out.println("Can't find posts");
+            System.out.println(e.getMessage());
             e.printStackTrace();
             return JSONHandler.generateAnswer("get_all_posts", Json.createArrayBuilder().build(), false);
         }
     }
 
+    // Getting last post for some period.
     public JsonObject getLastPosts(JsonObject period) {
         try {
 
@@ -90,15 +111,17 @@ public class PostsHandler {
 
             JsonArray result = db.where(query);
 
-            return JSONHandler.generateAnswer("getLastPosts", result, true);
+            return JSONHandler.generateAnswer("get_last_posts", result, true);
 
         } catch (Exception e) {
             System.out.println("Can't find posts");
+            System.out.println(e.getMessage());
             e.printStackTrace();
-            return JSONHandler.generateAnswer("getLastPosts", period, false);
+            return JSONHandler.generateAnswer("get_last_posts", period, false);
         }
     }
 
+    // Saving new post.
     public JsonObject save(JsonObject content) {
         try {
             JsonObject query = Json.createObjectBuilder()
@@ -114,12 +137,15 @@ public class PostsHandler {
 
         } catch (Exception e) {
             System.out.println("Can't save the post");
+            System.out.println(e.getMessage());
             e.printStackTrace();
             return JSONHandler.generateAnswer("save_post", content, false);
         }
 
     }
 
+
+    // Sending signal about new post to all subscribers.
     private void eventBroadcast(JsonObject post) {
 
         for (PostsSubscriber subscriber : subscribers) {
