@@ -13,11 +13,24 @@ import java.util.concurrent.Semaphore;
 
 /**
  * Created by nsuprotivniy on 25.01.17.
+ *
  */
+
+/*
+    Database processor.
+
+    It connects to database using path to db location in params.
+    It implements simple ORM for working with database using sql queries. It can create new table,
+    searching records in the table and save new.
+
+    It uses JSON objects getting via params to form query to database.
+
+    Note: there are no special functionality for sql injection protection.
+ */
+
 public class DataBase {
 
     private Connection connection;
-    private Statement statement;
     private Semaphore mutex = new Semaphore(1);
 
     DataBase(String path, JsonObject table) {
@@ -33,7 +46,6 @@ public class DataBase {
     DataBase(String path) {
         try {
             connect(path);
-            statement = connection.createStatement();
         } catch (Exception e) {
             System.out.println("Connection error");
             e.printStackTrace();
@@ -46,14 +58,13 @@ public class DataBase {
         connection = null;
         Class.forName("org.sqlite.JDBC");
         connection = DriverManager.getConnection("jdbc:sqlite:" + path);
-
         System.out.println("Base connected!");
     }
 
     // Table creation
     public void create(JsonObject table) throws ClassNotFoundException, SQLException
     {
-        statement = connection.createStatement();
+        Statement statement = connection.createStatement();
 
         StringBuilder query = new StringBuilder();
 
@@ -74,6 +85,8 @@ public class DataBase {
         System.out.println(query.toString());
 
         statement.execute(query.toString());
+
+        statement.close();
 
         //statement.execute("CREATE TABLE if not exists 'users' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'name' text, 'phone' INT);");
 
@@ -117,7 +130,7 @@ public class DataBase {
             Thread.yield();
         }
 
-
+        Statement statement = connection.createStatement();
         statement.execute(query.toString());
 
         //statement.execute("INSERT INTO 'users' ('name', 'phone') VALUES ('Petya', 125453); ");
@@ -128,7 +141,13 @@ public class DataBase {
 
         System.out.println("Record saved.");
 
-        return ResultSetToJsonArray(resultSet);
+        JsonArray result = ResultSetToJsonArray(resultSet);
+
+        resultSet.close();
+        statement.close();
+
+
+        return result;
     }
 
     // Records searching
@@ -151,14 +170,16 @@ public class DataBase {
 
         System.out.println(query.toString());
 
+        Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(query.toString());
 
         JsonArray result = ResultSetToJsonArray(resultSet);
 
-        resultSet.close();
-        //statement.execute("SELECT * FROM posts WHERE author='Noname'");
-
         System.out.println("Record found");
+
+        resultSet.close();
+        statement.close();
+        //statement.execute("SELECT * FROM posts WHERE author='Noname'");
 
         return result;
     }
@@ -183,6 +204,7 @@ public class DataBase {
     // Remove all records
     public void clear(String table) throws ClassNotFoundException, SQLException
     {
+        Statement statement = connection.createStatement();
         statement.execute("DELETE from " + table);
     }
 
@@ -190,7 +212,6 @@ public class DataBase {
     // Close the connection
     public void close() throws ClassNotFoundException, SQLException
     {
-        statement.close();
         connection.close();
 
         System.out.println("Connection closed.");

@@ -32,7 +32,7 @@ public class Client {
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         ){
 
-            new Thread( new ServerListner(in) ).start();
+            new Thread( new ServerListener(in) ).start();
 
             String request;
 
@@ -70,7 +70,7 @@ public class Client {
                         request = "{\"cmd\": \"getLastPosts\", \"content\": {\"period\": \"day\", \"amount\": \"7\"}}";
                         break;
                     default:
-                        request = "{\"cmd\": \"exit\",\"content\": {}}";
+                        request = "{\"cd\": \"exit\",\"content\": {}}";
                         break;
                 }
 
@@ -88,10 +88,10 @@ public class Client {
     }
 
 
-    private class ServerListner implements Runnable {
+    private class ServerListener implements Runnable {
         BufferedReader in;
 
-        ServerListner(BufferedReader in) {
+        ServerListener(BufferedReader in) {
             this.in = in;
         }
         public void run() {

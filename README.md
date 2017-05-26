@@ -14,7 +14,7 @@ For whole session you can use only one TCP connection to server.
 For communication you should send JSON formated string of command and query content.
 Responce formated with JSON too. 
 
-There are two status of query: successful and unsuccessful. You can catch unsuccessful status if
+There are two statuses of query: successful and unsuccessful. You can catch unsuccessful status if
 there were any errors while server had been handling client's query.
 
 ### Examples of requests and responce format.
@@ -159,7 +159,7 @@ Request
 
 ``` json
 {  
-   "cmd":"find_posts,
+   "cmd":"find_posts",
    "content":{  
       "title":"Lorem Ipsum",
       "author":"Marcus Tullius Cicero"

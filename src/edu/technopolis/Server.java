@@ -10,42 +10,53 @@ import javax.json.JsonReader;
 /**
  * Created by nsuprotivniy on 24.01.17.
  */
+
+
+
 public class Server {
 
-    Server(int port) {
-        ServerSocket server = null;
+    ServerSocket server = null;
 
-        try {
-            server = new ServerSocket(port);
+    Server(int port) throws IOException {
+        server = new ServerSocket(port);
+        new Thread( new ClientWaiter(server) ).start();
+        while (true);
+    }
 
+    public void close() throws IOException{
+        server.close();
+    }
+
+    private class ClientWaiter implements Runnable {
+        ServerSocket server;
+
+        ClientWaiter(ServerSocket server) {
+            this.server = server;
+        }
+
+        public void run() {
             System.out.println("Waiting for a client...");
-            while (true) {
-                Socket client = server.accept();
-                System.out.println("Client connected");
-                new Thread( new SocketProcessor(client) ).start();
-            }
 
-        } catch (IOException e) {
-            System.out.println("Couldn't listen to port " + port);
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        } finally {
             try {
-                server.close();
-            } catch (Exception e) {
-                System.out.println("Can't close server");
+                while (true) {
+                    Socket client = server.accept();
+                    System.out.println("Client connected");
+                    new Thread( new SocketProcessor(client) ).start();
+                }
+            } catch (IOException e) {
+                System.out.println("Client accept error");
                 System.out.println(e.getMessage());
                 e.printStackTrace();
             }
 
-
         }
+
     }
 
     private class SocketProcessor implements Runnable {
 
         Socket client;
-        PostsHandler postsHandler;
+        PostsHandler postsHandler; // TODO close postsHandler
 
         SocketProcessor(Socket client) {
 
@@ -80,7 +91,7 @@ public class Server {
                 while ((request = in.readLine()) != null) {
                     System.out.println(request);
 
-                    //request = "{\"cmd\": \"find_post\",\"content\": {\"author\": \"Noname\"}}";
+                    // request = "{\"cmd\": \"find_post\",\"content\": {\"author\": \"Noname\"}}";
 
                     JsonObject result = handleRequest(request);
 
@@ -114,7 +125,7 @@ public class Server {
                 System.out.println("Parse error");
                 System.out.println(e.getMessage());
                 e.printStackTrace();
-                return Json.createObjectBuilder().add("result", "unsuccessful").build();
+                return JSONHandler.generateAnswer("parse_query", Json.createObjectBuilder().build(), false);
             }
 
             try {
@@ -127,7 +138,7 @@ public class Server {
                     case "get_all_posts":  return postsHandler.getAll();
                     case "getLastPosts": return postsHandler.getLastPosts(commandJSON.getJsonObject("content"));
                     case "save_post": return postsHandler.save(commandJSON.getJsonObject("content"));
-                    default: return Json.createObjectBuilder().add("result", "unsuccessful").build();
+                    default: return JSONHandler.generateAnswer(command, Json.createObjectBuilder().build(), false);
                 }
 
 
@@ -135,7 +146,7 @@ public class Server {
                 System.out.println("Error while reading json command");
                 System.out.println(e.getMessage());
                 e.printStackTrace();
-                return Json.createObjectBuilder().add("result", "unsuccessful").build();
+                return JSONHandler.generateAnswer("parse_query", Json.createObjectBuilder().build(), false);
             }
         }
 
@@ -155,6 +166,12 @@ public class Server {
 
 
     public static void main(String[] args) {
-        Server server = new Server(8080);
+        try {
+            Server server = new Server(8080);
+            server.close();
+        } catch (IOException e) {
+            System.out.println("Can't listen port 8080");
+        }
+
     }
 }

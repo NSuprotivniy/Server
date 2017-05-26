@@ -10,6 +10,13 @@ import java.util.List;
  * Created by nsuprotivniy on 26.01.17.
  */
 
+/*
+    Class provides access to posts database table.
+    It uses DataBase processor forming JSON queries with clause
+    getting via params.
+
+ */
+
 public class PostsHandler {
 
     // Class is Singleton. It makes access to subscribers in one place

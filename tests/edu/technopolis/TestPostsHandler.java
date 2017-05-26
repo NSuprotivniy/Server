@@ -31,10 +31,15 @@ public class TestPostsHandler {
 
         try {
             db.clear("posts");
+            db.close();
         } catch (Exception e) {
             Assert.fail("Can't clear table");
         }
+    }
 
+    @AfterClass
+    public void closePostsHandler() {
+        postsHandler.close();
     }
 
     @Test
@@ -73,7 +78,7 @@ public class TestPostsHandler {
                 .build();
 
         String result = postsHandler.find(query).toString();
-        String expectation = JSONHandler.generateAnswer("find_post", save_result_content,true).toString();
+        String expectation = JSONHandler.generateAnswer("find_posts", save_result_content,true).toString();
 
         Assert.assertEquals("Incorrect find result", expectation, result);
     }
@@ -93,7 +98,7 @@ public class TestPostsHandler {
 
         JsonObject result = postsHandler.find(query);
 
-        Assert.assertEquals("cmd should be find_post", "find_post", result.getString("cmd"));
+        Assert.assertEquals("cmd should be find_post", "find_posts", result.getString("cmd"));
         Assert.assertEquals("status should be successful", "successful", result.getString("status"));
         Assert.assertTrue("content array should be empty", result.getJsonArray("content").isEmpty());
     }
