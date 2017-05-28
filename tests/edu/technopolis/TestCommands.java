@@ -94,6 +94,10 @@ public class TestCommands {
 
         JsonObject result = commands.handle(command);
 
+        Assert.assertEquals("cmd should be login", "login", result.getString("cmd"));
+
+        result = result.getJsonObject("respond");
+
         Assert.assertEquals("status should be successful", "successful", result.getString("status"));
 
         return  result;
@@ -104,39 +108,47 @@ public class TestCommands {
 
         Random random = new Random();
 
-        JsonObject feed_content = Json.createObjectBuilder()
+        JsonObject content = Json.createObjectBuilder()
                 .add("title", "test_feed_" + random.nextInt())
                 .add("author_id", author_id)
                 .build();
 
-        JsonObject feed_command = Json.createObjectBuilder()
+        JsonObject command = Json.createObjectBuilder()
                 .add("cmd", "feeds_save")
-                .add("content", feed_content)
+                .add("content", content)
                 .build();
 
-        JsonObject feeds_result = commands.handle(feed_command);
+        JsonObject result = commands.handle(command);
 
-        Assert.assertEquals("status should be successful", "successful", feeds_result.getString("status"));
+        Assert.assertEquals("cmd should be respond", "respond", result.getString("cmd"));
 
-        return feeds_result;
+        result = result.getJsonObject("respond");
+
+        Assert.assertEquals("status should be successful", "successful", result.getString("status"));
+
+        return result;
     }
 
     private JsonObject generateSubscriber(int user_id, int feed_id) {
-        JsonObject subscriber_content = Json.createObjectBuilder()
+        JsonObject content = Json.createObjectBuilder()
                 .add("feed_id", feed_id)
                 .add("user_id", user_id)
                 .build();
 
-        JsonObject subscriber_command = Json.createObjectBuilder()
+        JsonObject command = Json.createObjectBuilder()
                 .add("cmd", "subscribers_save")
-                .add("content", subscriber_content)
+                .add("content", content)
                 .build();
 
-        JsonObject subscriber_result = commands.handle(subscriber_command);
+        JsonObject result = commands.handle(command);
 
-        Assert.assertEquals("status should be successful", "successful", subscriber_result.getString("status"));
+        Assert.assertEquals("cmd should be respond", "respond", result.getString("cmd"));
 
-        return subscriber_result;
+        result = result.getJsonObject("respond");
+
+        Assert.assertEquals("status should be successful", "successful", result.getString("status"));
+
+        return result;
 
     }
 
@@ -157,6 +169,10 @@ public class TestCommands {
                 .build();
 
         JsonObject result = commands.handle(command);
+
+        Assert.assertEquals("cmd should be respond", "respond", result.getString("cmd"));
+
+        result = result.getJsonObject("respond");
 
         Assert.assertEquals("status should be successful", "successful", result.getString("status"));
 
