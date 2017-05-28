@@ -18,12 +18,26 @@ public class Commands {
     private UsersHandler users;
     private Session session;
 
+    private boolean Aquired;
 
     Commands() {
         posts = new PostsHandler();
         feeds = new FeedsHandler();
         subscribers = new SubscribersHandler();
         users = new UsersHandler();
+        Aquired = false;
+    }
+
+    public synchronized boolean aquire() {
+        if(Aquired == false) {
+            Aquired = true;
+            return true;
+        }
+        return false;
+    }
+
+    public synchronized void release() {
+        Aquired = false;
         session = Session.getInstance();
     }
     

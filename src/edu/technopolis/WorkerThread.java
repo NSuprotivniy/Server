@@ -17,13 +17,15 @@ public class WorkerThread implements Runnable {
     private String command;
     private SocketChannel sc;
     private PostsHandler postsHandler;
+    private Commands commands;
     Session session;
 
-    public WorkerThread(SocketChannel sc, String s){
+    public WorkerThread(SocketChannel sc, String s, Commands commands){
         this.command=s;
         this.sc = sc;
         this.postsHandler = PostsHandler.getInstance();
         this.session = Session.getInstance();
+        this.commands = commands;
     }
 
     @Override
@@ -35,6 +37,7 @@ public class WorkerThread implements Runnable {
 
     private void processCommand() {
         JsonObject result = handleRequest(command, sc);
+        commands.release();
         System.out.println("res: "+ result);
 
         String command = result.getString("cmd");
@@ -49,7 +52,6 @@ public class WorkerThread implements Runnable {
                 int clientID = result.getInt("arg");
                 try {
                     session.addClient(clientID, sc);
-                    System.out.println("Login " + clientID + " successful");
                 } catch (Session.SessionException e) {
                     System.err.println("Client " + clientID + "double login");
                     e.printStackTrace();
@@ -98,9 +100,7 @@ public class WorkerThread implements Runnable {
 
         try {
 
-            Commands commands = new Commands();
             return commands.handle(commandJSON);
-
 
         } catch (Exception e) {
             System.out.println("Error while reading json command");
