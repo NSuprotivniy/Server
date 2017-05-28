@@ -7,8 +7,8 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            Server server = new Server(8080);
-            server.close();
+            Server server = new Server(8080, 4);
+            //server.close();
         } catch (IOException e) {
             System.out.println("Can't listen port 8080");
         }

@@ -3,6 +3,14 @@ package edu.technopolis;
 import javax.json.Json;
 import java.net.*;
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 
@@ -15,160 +23,69 @@ import javax.json.JsonReader;
 
 public class Server {
 
-    ServerSocket server = null;
+    int socket = -1;
+    ExecutorService executor;
 
-    Server(int port) throws IOException {
-        server = new ServerSocket(port);
-        new Thread( new ClientWaiter(server) ).start();
-        while (true);
+    Server(int port, int threadNum) throws IOException {
+        socket = port;
+        executor = Executors.newFixedThreadPool(threadNum);
     }
 
-    public void close() throws IOException{
-        server.close();
-    }
-
-    private class ClientWaiter implements Runnable {
-        ServerSocket server;
-
-        ClientWaiter(ServerSocket server) {
-            this.server = server;
+    private static void close(SocketChannel sc) {
+        try {
+            sc.close();
+        } catch (IOException e1) {
+            e1.printStackTrace();
         }
+    }
 
-        public void run() {
-            System.out.println("Waiting for a client...");
-
-            try {
-                while (true) {
-                    Socket client = server.accept();
-                    System.out.println("Client connected");
-                    new Thread( new SocketProcessor(client) ).start();
+    public void select() {
+        HashMap<SocketChannel, ByteBuffer> map = new HashMap<>();
+        try (ServerSocketChannel open = openAndBind(socket)) {
+            open.configureBlocking(false);
+            while (true) {
+                SocketChannel accept = open.accept(); //не блокируется
+                if (accept != null) {
+                    accept.configureBlocking(false);
+                    map.put(accept, ByteBuffer.allocateDirect(1024));
                 }
-            } catch (IOException e) {
-                System.out.println("Client accept error");
-                System.out.println(e.getMessage());
-                e.printStackTrace();
-            }
-
-        }
-
-    }
-
-    private class SocketProcessor implements Runnable {
-
-        Socket client;
-        PostsHandler postsHandler; // TODO close postsHandler
-
-        SocketProcessor(Socket client) {
-
-            this.client = client;
-            this.postsHandler = PostsHandler.getInstance();
-        }
-
-        public void run() {
-            try {
-                listenForClient();
-            } catch (Throwable t) {
-                System.out.println("Connection error");
-                t.printStackTrace();
-
-            } finally {
-                try {
-                    client.close();
-                } catch (Throwable t) {
-                    System.out.println("Can't close client");
-                    t.printStackTrace();
-                }
-            }
-        }
-
-        private void listenForClient() throws Throwable {
-
-            try {
-                BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                PrintWriter out = new PrintWriter(client.getOutputStream(), true);
-                String request;
-
-                while ((request = in.readLine()) != null) {
-                    System.out.println(request);
-
-                    // request = "{\"cmd\": \"find_post\",\"content\": {\"author\": \"Noname\"}}";
-
-                    JsonObject result = handleRequest(request);
-
-                    if (result == null) {
-                        System.out.println("Connection disabled.");
-                        break;
+                map.keySet().removeIf(sc -> !sc.isOpen());
+                map.forEach((sc, byteBuffer) -> {
+                    try {
+                        int read = sc.read(byteBuffer);
+                        if (read == -1) {
+                            System.out.println("Closing socket");
+                            close(sc);
+                        } else if (read > 0) {
+                            byteBuffer.flip();
+                            byte[] bytes = new byte[byteBuffer.remaining()]; // create a byte array the length of the number of bytes written to the buffer
+                            byteBuffer.get(bytes); // read the bytes that were written
+                            String request = new String(bytes);
+                            byteBuffer.compact();
+                            Runnable task = new WorkerThread(sc, request);
+                            executor.execute(task);
+                        }
+                    } catch (IOException e) {
+                        close(sc);
+                        e.printStackTrace();
                     }
-
-                    System.out.println(result.toString());
-                    out.println(result.toString());
-
-                }
-
-            } catch (IOException e) {
-                System.out.println("Stream error");
-                System.out.println(e.getMessage());
-                e.printStackTrace();
-            } finally {
-                client.close();
-                postsHandler.close();
+                });
             }
-        }
-
-        private JsonObject handleRequest(String request) {
-            JsonObject commandJSON;
-
-            try {
-                JsonReader reader =  Json.createReader(new StringReader(request));
-                commandJSON = reader.readObject();
-            } catch (Exception e) {
-                System.out.println("Parse error");
-                System.out.println(e.getMessage());
-                e.printStackTrace();
-                return JSONHandler.generateAnswer("parse_query", Json.createObjectBuilder().build(), false);
-            }
-
-            try {
-                String command = commandJSON.getString("cmd");
-
-                switch (command) {
-                    case "exit": return null;
-                    case "subscribe_posts": return subscribePosts();
-                    case "find_posts": return postsHandler.find(commandJSON.getJsonObject("content"));
-                    case "get_all_posts":  return postsHandler.getAll();
-                    case "getLastPosts": return postsHandler.getLastPosts(commandJSON.getJsonObject("content"));
-                    case "save_post": return postsHandler.save(commandJSON.getJsonObject("content"));
-                    default: return JSONHandler.generateAnswer(command, Json.createObjectBuilder().build(), false);
-                }
-
-
-            } catch (Exception e) {
-                System.out.println("Error while reading json command");
-                System.out.println(e.getMessage());
-                e.printStackTrace();
-                return JSONHandler.generateAnswer("parse_query", Json.createObjectBuilder().build(), false);
-            }
-        }
-
-        private JsonObject subscribePosts() {
-            try {
-                PostsSubscriber subscriber = new PostsSubscriber(client);
-                postsHandler.addSubscriber(subscriber);
-                return JSONHandler.generateAnswer("subscribe_posts", Json.createObjectBuilder().build(), true);
-            } catch (Exception e) {
-                System.out.println("Can't create subscriber");
-                System.out.println(e.getMessage());
-                e.printStackTrace();
-                return JSONHandler.generateAnswer("subscribe_posts", Json.createObjectBuilder().build(), false);
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
+    private static ServerSocketChannel openAndBind(int port) throws IOException {
+        ServerSocketChannel open = ServerSocketChannel.open();
+        open.bind(new InetSocketAddress(port));
+        return open;
+    }
 
     public static void main(String[] args) {
         try {
-            Server server = new Server(8080);
-            server.close();
+            Server server = new Server(8080, 4);
+            server.select();
         } catch (IOException e) {
             System.out.println("Can't listen port 8080");
         }
