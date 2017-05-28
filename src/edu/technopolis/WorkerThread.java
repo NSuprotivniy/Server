@@ -17,13 +17,15 @@ public class WorkerThread implements Runnable {
     private String command;
     private SocketChannel sc;
     private PostsHandler postsHandler;
+    private Commands commands;
     Session session;
 
-    public WorkerThread(SocketChannel sc, String s){
+    public WorkerThread(SocketChannel sc, String s, Commands commands){
         this.command=s;
         this.sc = sc;
         this.postsHandler = PostsHandler.getInstance();
         this.session = Session.getInstance();
+        this.commands = commands;
     }
 
     @Override
@@ -35,6 +37,7 @@ public class WorkerThread implements Runnable {
 
     private void processCommand() {
         JsonObject result = handleRequest(command, sc);
+        commands.release();
         System.out.println("res: "+ result);
 
         String command = result.getString("cmd");
@@ -97,44 +100,13 @@ public class WorkerThread implements Runnable {
         }
 
         try {
-            String command = commandJSON.getString("cmd");
-
-            switch (command) {
-                case "exit":
-                    return null;
-                case "subscribe_posts":
-                    return subscribePosts(client);
-                case "find_posts":
-                    return postsHandler.find(commandJSON.getJsonObject("content"));
-                case "get_all_posts":
-                    return postsHandler.getAll();
-                case "getLastPosts":
-                    return postsHandler.getLastPosts(commandJSON.getJsonObject("content"));
-                case "save_post":
-                    return postsHandler.save(commandJSON.getJsonObject("content"));
-                default:
-                    return JSONHandler.generateAnswer(command, Json.createObjectBuilder().build(), false);
-            }
-
+            return commands.handle(commandJSON);
 
         } catch (Exception e) {
             System.out.println("Error while reading json command");
             System.out.println(e.getMessage());
             e.printStackTrace();
             return JSONHandler.generateAnswer("parse_query", Json.createObjectBuilder().build(), false);
-        }
-    }
-
-    private JsonObject subscribePosts(SocketChannel client) {
-        try {
-            PostsSubscriber subscriber = new PostsSubscriber(client);
-            postsHandler.addSubscriber(subscriber);
-            return JSONHandler.generateAnswer("subscribe_posts", Json.createObjectBuilder().build(), true);
-        } catch (Exception e) {
-            System.out.println("Can't create subscriber");
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-            return JSONHandler.generateAnswer("subscribe_posts", Json.createObjectBuilder().build(), false);
         }
     }
 }

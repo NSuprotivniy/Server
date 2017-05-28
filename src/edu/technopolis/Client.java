@@ -52,7 +52,7 @@ public class Client {
 
                 switch (sc.nextInt()) {
                     case 0:
-                        request = "{\"cmd\": \"find_post\",\"content\": {\"author\": \"Marcus Tullius Cicero\"}}";
+                        request = "{\"cmd\": \"posts_find\",\"content\": {\"author_id\": \"1\"}}";
                         break;
                     case 1:
                         request = "{\"cmd\": \"find_post\",\"content\": {\"title\": \"Lorem Ipsum\"}}";
