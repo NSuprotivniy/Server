@@ -1,0 +1,21 @@
+<component name="libraryTable">
+  <library name="net.hamnaberg.json:immutable-json-javax:5.1.0" type="repository">
+    <properties maven-id="net.hamnaberg.json:immutable-json-javax:5.1.0" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/hamnaberg/json/immutable-json-javax/5.1.0/immutable-json-javax-5.1.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/net/hamnaberg/json/immutable-json-core/5.1.0/immutable-json-core-5.1.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/net/hamnaberg/json/immutable-json-ast/5.1.0/immutable-json-ast-5.1.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/io/javaslang/javaslang/2.0.5/javaslang-2.0.5.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/io/javaslang/javaslang-match/2.0.5/javaslang-match-2.0.5.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/javax.json/1.0.4/javax.json-1.0.4.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/net/hamnaberg/json/immutable-json-javax/5.1.0/immutable-json-javax-5.1.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/net/hamnaberg/json/immutable-json-core/5.1.0/immutable-json-core-5.1.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/net/hamnaberg/json/immutable-json-ast/5.1.0/immutable-json-ast-5.1.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/io/javaslang/javaslang/2.0.5/javaslang-2.0.5.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/io/javaslang/javaslang-match/2.0.5/javaslang-match-2.0.5.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/javax.json/1.0.4/javax.json-1.0.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

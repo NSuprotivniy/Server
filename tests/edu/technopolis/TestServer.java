@@ -66,8 +66,8 @@ public class TestServer {
     @Before
     public void createServerAndClient() {
         try {
-            Server server = new Server(8080);
-            server.close();
+            Server server = new Server(8080, 4);
+            //server.close();
         } catch (IOException e) {
             Assert.fail("Can't listen port 8080");
         }
@@ -94,7 +94,7 @@ public class TestServer {
     @After
     public void closeServer() {
         try {
-            server.close();
+            //server.close();
             client.close();
         } catch (Exception e) {
             Assert.fail("Socket error: " + e.getMessage());

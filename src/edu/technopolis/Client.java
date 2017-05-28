@@ -99,7 +99,7 @@ public class Client {
             try {
 
                 while ((response = in.readLine()) != null) {
-                    System.out.println(response);
+                    System.out.println("response: "+response);
                 }
             } catch (Exception e) {
                 System.out.println("Can't read from server");
