@@ -16,13 +16,26 @@ public class Commands {
     private FeedsHandler feeds;
     private SubscribersHandler subscribers;
     private UsersHandler users;
-
+    private boolean Aquired;
 
     Commands() {
         posts = new PostsHandler();
         feeds = new FeedsHandler();
         subscribers = new SubscribersHandler();
         users = new UsersHandler();
+        Aquired = false;
+    }
+
+    public synchronized boolean aquire() {
+        if(Aquired == false) {
+            Aquired = true;
+            return true;
+        }
+        return false;
+    }
+
+    public synchronized void release() {
+        Aquired = false;
     }
     
     public JsonObject handle(JsonObject command) {

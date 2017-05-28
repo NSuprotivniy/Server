@@ -24,11 +24,15 @@ import javax.json.JsonReader;
 public class Server {
 
     int socket = -1;
-    ExecutorService executor;
+    private ExecutorService executor;
+    private Commands[] commands;
 
     Server(int port, int threadNum) throws IOException {
         socket = port;
         executor = Executors.newFixedThreadPool(threadNum);
+        commands = new Commands[threadNum];
+        for(int i = 0; i < threadNum; i++)
+            commands[i] = new Commands();
     }
 
     private static void close(SocketChannel sc) {
@@ -38,6 +42,16 @@ public class Server {
             e1.printStackTrace();
         }
     }
+
+    private Commands getCommandsInstance() throws ServerException {
+        for(int i = 0; i < commands.length - 1; i++) {
+            if(commands[i].aquire())
+                return commands[i];
+        }
+        throw new ServerException();
+    }
+
+
 
     public void select() {
         HashMap<SocketChannel, ByteBuffer> map = new HashMap<>();
@@ -62,7 +76,14 @@ public class Server {
                             byteBuffer.get(bytes); // read the bytes that were written
                             String request = new String(bytes);
                             byteBuffer.compact();
-                            Runnable task = new WorkerThread(sc, request);
+                            Commands command = commands[0];
+                            try {
+                                command = getCommandsInstance();
+                            } catch (ServerException e) {
+                                System.out.println("Connection pool is empty.");
+                                e.printStackTrace();
+                            }
+                            Runnable task = new WorkerThread(sc, request, command);
                             executor.execute(task);
                         }
                     } catch (IOException e) {
@@ -80,6 +101,10 @@ public class Server {
         ServerSocketChannel open = ServerSocketChannel.open();
         open.bind(new InetSocketAddress(port));
         return open;
+    }
+
+    public class ServerException extends Exception {
+
     }
 
     public static void main(String[] args) {
