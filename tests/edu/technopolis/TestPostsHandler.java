@@ -15,6 +15,10 @@ import java.sql.Statement;
  * Created by nsuprotivniy on 31.01.17.
  */
 
+/**
+ * IT TESTS OLD IMPLEMENTATION. THE TEST IS NOT WORKING.
+ */
+
 
 public class TestPostsHandler {
 
@@ -128,7 +132,7 @@ public class TestPostsHandler {
         postsHandler.save(post2);
         postsHandler.save(post3);
 
-        JsonObject getAll_result = postsHandler.getAll();
+        JsonObject getAll_result = postsHandler.all();
 
         JsonArray records = getAll_result.getJsonArray("content");
 

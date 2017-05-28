@@ -133,9 +133,8 @@ public class Server {
 
                 switch (command) {
                     case "exit": return null;
-                    case "subscribe_posts": return subscribePosts();
                     case "find_posts": return postsHandler.find(commandJSON.getJsonObject("content"));
-                    case "get_all_posts":  return postsHandler.getAll();
+                    case "get_all_posts":  return postsHandler.all();
                     case "getLastPosts": return postsHandler.getLastPosts(commandJSON.getJsonObject("content"));
                     case "save_post": return postsHandler.save(commandJSON.getJsonObject("content"));
                     default: return JSONHandler.generateAnswer(command, Json.createObjectBuilder().build(), false);
@@ -147,19 +146,6 @@ public class Server {
                 System.out.println(e.getMessage());
                 e.printStackTrace();
                 return JSONHandler.generateAnswer("parse_query", Json.createObjectBuilder().build(), false);
-            }
-        }
-
-        private JsonObject subscribePosts() {
-            try {
-                PostsSubscriber subscriber = new PostsSubscriber(client);
-                postsHandler.addSubscriber(subscriber);
-                return JSONHandler.generateAnswer("subscribe_posts", Json.createObjectBuilder().build(), true);
-            } catch (Exception e) {
-                System.out.println("Can't create subscriber");
-                System.out.println(e.getMessage());
-                e.printStackTrace();
-                return JSONHandler.generateAnswer("subscribe_posts", Json.createObjectBuilder().build(), false);
             }
         }
     }

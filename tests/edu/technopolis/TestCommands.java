@@ -9,6 +9,7 @@ import org.junit.*;
 
 import javax.json.Json;
 import javax.json.JsonObject;
+import java.util.Random;
 
 
 public class TestCommands {
@@ -38,43 +39,74 @@ public class TestCommands {
     @Test
     public void test_subscribers_save() {
 
-        JsonObject author_content = Json.createObjectBuilder()
-                .add("name", "author")
+        JsonObject author_set = generateUser();
+        int author_id = Integer.parseInt(author_set.getJsonArray("content").getJsonObject(0).getString("id"));
+
+        JsonObject user_set = generateUser();
+        int user_id = Integer.parseInt(user_set.getJsonArray("content").getJsonObject(0).getString("id"));
+
+        JsonObject feed_set = generateFeed(user_id);
+        int feed_id = Integer.parseInt(feed_set.getJsonArray("content").getJsonObject(0).getString("id"));
+
+
+        JsonObject subscriber_set = generateSubscriber(user_id, feed_id);
+        JsonObject subscriber = subscriber_set.getJsonArray("content").getJsonObject(0);
+
+        Assert.assertEquals("status should be successful", "successful", subscriber_set.getString("status"));
+        Assert.assertEquals("user id should be correct", user_id, Integer.parseInt(subscriber.getString("user_id")));
+        Assert.assertEquals("feed id should be correct", feed_id, Integer.parseInt(subscriber.getString("feed_id")));
+
+
+    }
+
+
+    @Test public void test_posts_save() {
+
+        JsonObject user_set = generateUser();
+        int user_id = Integer.parseInt(user_set.getJsonArray("content").getJsonObject(0).getString("id"));
+
+        JsonObject feed_set = generateFeed(user_id);
+        int feed_id = Integer.parseInt(feed_set.getJsonArray("content").getJsonObject(0).getString("id"));
+
+        JsonObject posts_set = generatePost(user_id, feed_id);
+        JsonObject subscriber = posts_set.getJsonArray("content").getJsonObject(0);
+
+        Assert.assertEquals("status should be successful", "successful", posts_set.getString("status"));
+        Assert.assertEquals("author id should be correct", user_id, Integer.parseInt(subscriber.getString("author_id")));
+        Assert.assertEquals("feed id should be correct", feed_id, Integer.parseInt(subscriber.getString("feed_id")));
+
+
+    }
+
+
+    private JsonObject generateUser() {
+
+        Random random = new Random();
+
+        JsonObject content = Json.createObjectBuilder()
+                .add("name", "test_user_" + random.nextInt())
                 .build();
 
-        JsonObject author_command = Json.createObjectBuilder()
+        JsonObject command = Json.createObjectBuilder()
                 .add("cmd", "users_save")
-                .add("content", author_content)
+                .add("content", content)
                 .build();
 
-        JsonObject author_result = commands.handle(author_command);
+        JsonObject result = commands.handle(command);
 
-        Assert.assertEquals("status should be successful", "successful", author_result.getString("status"));
-        int author_id = Integer.parseInt(author_result.getJsonArray("content").getJsonObject(0).getString("id"));
+        Assert.assertEquals("status should be successful", "successful", result.getString("status"));
+
+        return  result;
+    }
 
 
-        System.out.println(author_command.toString());
+    private JsonObject generateFeed(int author_id) {
 
-        JsonObject user_content = Json.createObjectBuilder()
-                .add("name", "subscriber")
-                .build();
-
-        JsonObject user_command = Json.createObjectBuilder()
-                .add("cmd", "users_save")
-                .add("content", user_content)
-                .build();
-
-        JsonObject user_result = commands.handle(user_command);
-
-        Assert.assertEquals("status should be successful", "successful", user_result.getString("status"));
-        int user_id = Integer.parseInt(user_result.getJsonArray("content").getJsonObject(0).getString("id"));
-
-        System.out.println(user_result.toString());
-
+        Random random = new Random();
 
         JsonObject feed_content = Json.createObjectBuilder()
-                .add("title", "Test feed")
-                .add("author_id", 1)
+                .add("title", "test_feed_" + random.nextInt())
+                .add("author_id", author_id)
                 .build();
 
         JsonObject feed_command = Json.createObjectBuilder()
@@ -85,10 +117,11 @@ public class TestCommands {
         JsonObject feeds_result = commands.handle(feed_command);
 
         Assert.assertEquals("status should be successful", "successful", feeds_result.getString("status"));
-        int feed_id = Integer.parseInt(feeds_result.getJsonArray("content").getJsonObject(0).getString("id"));
 
-        System.out.println(feeds_result.toString());
+        return feeds_result;
+    }
 
+    private JsonObject generateSubscriber(int user_id, int feed_id) {
         JsonObject subscriber_content = Json.createObjectBuilder()
                 .add("feed_id", feed_id)
                 .add("user_id", user_id)
@@ -101,15 +134,33 @@ public class TestCommands {
 
         JsonObject subscriber_result = commands.handle(subscriber_command);
 
-        System.out.println(subscriber_result.toString());
-
-        JsonObject subscriber = subscriber_result.getJsonArray("content").getJsonObject(0);
-
         Assert.assertEquals("status should be successful", "successful", subscriber_result.getString("status"));
-        Assert.assertEquals("user id should be correct", user_id, Integer.parseInt(subscriber.getString("user_id")));
-        Assert.assertEquals("feed id should be correct", feed_id, Integer.parseInt(subscriber.getString("feed_id")));
 
+        return subscriber_result;
 
     }
 
+    private JsonObject generatePost(int author_id, int feed_id) {
+
+        Random random = new Random();
+
+        JsonObject content = Json.createObjectBuilder()
+                .add("title", "post_title" + random.nextInt())
+                .add("body", "post_body" + random.nextInt())
+                .add("feed_id", feed_id)
+                .add("author_id", author_id)
+                .build();
+
+        JsonObject command = Json.createObjectBuilder()
+                .add("cmd", "posts_save")
+                .add("content", content)
+                .build();
+
+        JsonObject result = commands.handle(command);
+
+        Assert.assertEquals("status should be successful", "successful", result.getString("status"));
+
+        return result;
+
+    }
 }

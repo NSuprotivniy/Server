@@ -103,7 +103,7 @@ public class Commands {
     }
 
     private JsonObject posts_all(JsonObject content) {
-        return posts.getAll();
+        return posts.all();
     }
 
     private JsonObject posts_find(JsonObject content) {
@@ -120,11 +120,6 @@ public class Commands {
 
     private JsonObject subscribers_find(JsonObject content) {
         return subscribers.find(content);
-    }
-
-
-    public static void main(String[] args) {
-        Commands commands = new Commands();
     }
 }
 

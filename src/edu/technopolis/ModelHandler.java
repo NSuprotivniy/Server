@@ -102,4 +102,15 @@ public abstract class ModelHandler {
     public JsonObject get(JsonObject content) {
         return null;
     }
+
+
+    public void close() {
+        try {
+            db.close();
+        } catch (Exception e) {
+            System.out.println("Can't close database connection");
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }
