@@ -20,8 +20,8 @@ public class SubscribersHandler extends ModelHandler {
 
     // Class is Singleton. It makes access to subscribers in one place
     // and one connection to data base with serialized mode.
-    private static final SubscribersHandler INSTANCE = new SubscribersHandler();
-    public static SubscribersHandler getInstance() { return INSTANCE; }
+//    private static final SubscribersHandler INSTANCE = new SubscribersHandler();
+//    public static SubscribersHandler getInstance() { return INSTANCE; }
 
 
     String SEND_POST_CMD = "subscribers_send_post";
@@ -31,6 +31,17 @@ public class SubscribersHandler extends ModelHandler {
         DB_PATH = "DataBase/Post.db";
         TABLE_NAME = "subscribers";
         db = new DataBase(DB_PATH);
+        FIND_CMD = "subscribers_find";
+        SAVE_CMD = "subscribers_save";
+        GET_CMD = "subscribers_get";
+        ALL_CMD = "subscribers_all";
+        session = Session.getInstance();
+    }
+
+    SubscribersHandler(DataBase db) {
+        this.db = db;
+        DB_PATH = "DataBase/Post.db";
+        TABLE_NAME = "subscribers";
         FIND_CMD = "subscribers_find";
         SAVE_CMD = "subscribers_save";
         GET_CMD = "subscribers_get";

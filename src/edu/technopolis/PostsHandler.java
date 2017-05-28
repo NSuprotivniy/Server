@@ -21,12 +21,11 @@ public class PostsHandler extends ModelHandler {
 
     // Class is Singleton. It makes access to subscribers in one place
     // and one connection to data base with serialized mode.
-    private static final PostsHandler INSTANCE = new PostsHandler();
-    public static PostsHandler getInstance() { return INSTANCE; }
+//    private static final PostsHandler INSTANCE = new PostsHandler();
+//    public static PostsHandler getInstance() { return INSTANCE; }
 
 
     PostsHandler() {
-
         DB_PATH = "DataBase/Post.db";
         TABLE_NAME = "posts";
         db = new DataBase(DB_PATH);
@@ -35,6 +34,18 @@ public class PostsHandler extends ModelHandler {
         GET_CMD = "posts_get";
         ALL_CMD = "posts_all";
     }
+
+    PostsHandler(DataBase db) {
+        this.db = db;
+        DB_PATH = "DataBase/Post.db";
+        TABLE_NAME = "posts";
+        FIND_CMD = "posts_find";
+        SAVE_CMD = "posts_save";
+        GET_CMD = "posts_get";
+        ALL_CMD = "posts_all";
+    }
+
+
 
 
     // Getting last post for some period.

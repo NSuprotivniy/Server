@@ -23,7 +23,6 @@ public class WorkerThread implements Runnable {
     public WorkerThread(SocketChannel sc, String s, Commands commands){
         this.command=s;
         this.sc = sc;
-        this.postsHandler = PostsHandler.getInstance();
         this.session = Session.getInstance();
         this.commands = commands;
     }

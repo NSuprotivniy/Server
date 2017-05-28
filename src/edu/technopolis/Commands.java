@@ -17,14 +17,17 @@ public class Commands {
     private SubscribersHandler subscribers;
     private UsersHandler users;
     private Session session;
+    private DataBase db;
 
     private boolean Aquired;
 
     Commands() {
-        posts = new PostsHandler();
-        feeds = new FeedsHandler();
-        subscribers = new SubscribersHandler();
-        users = new UsersHandler();
+        db = new DataBase("DataBase/Post.db");
+        posts = new PostsHandler(db);
+        feeds = new FeedsHandler(db);
+        subscribers = new SubscribersHandler(db);
+        users = new UsersHandler(db);
+        session = Session.getInstance();
         Aquired = false;
     }
 
@@ -38,7 +41,6 @@ public class Commands {
 
     public synchronized void release() {
         Aquired = false;
-        session = Session.getInstance();
     }
     
     public JsonObject handle(JsonObject command) {

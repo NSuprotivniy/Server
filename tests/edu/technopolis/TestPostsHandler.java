@@ -26,7 +26,7 @@ public class TestPostsHandler {
 
     @BeforeClass
     public static void createPostsHandler() {
-        postsHandler = PostsHandler.getInstance();
+        postsHandler = new PostsHandler();
     }
 
     @Before

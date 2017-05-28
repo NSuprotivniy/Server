@@ -35,7 +35,7 @@ public class TestServer {
             Assert.fail("Can't clear table");
         }
 
-        PostsHandler postsHandler = PostsHandler.getInstance();
+        PostsHandler postsHandler = new PostsHandler();
 
         JsonObject post1 = Json.createObjectBuilder()
                 .add("title", "Lorem Ipsum")
