@@ -47,7 +47,7 @@ public abstract class ModelHandler {
             System.out.println("Can't find");
             System.out.println(e.getMessage());
             e.printStackTrace();
-            return JSONHandler.generateAnswer(FIND_CMD, clause, true);
+            return JSONHandler.generateAnswer(FIND_CMD, clause, false);
         }
     }
 

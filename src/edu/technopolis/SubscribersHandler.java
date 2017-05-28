@@ -2,6 +2,11 @@ package edu.technopolis;
 
 import org.sqlite.core.DB;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonValue;
+
 /**
  * Created by nsuprotivniy on 28.05.17.
  */
@@ -19,6 +24,8 @@ public class SubscribersHandler extends ModelHandler {
     public static SubscribersHandler getInstance() { return INSTANCE; }
 
 
+    String SEND_POST_CMD = "subscribers_send_post";
+
     SubscribersHandler() {
         DB_PATH = "DataBase/Post.db";
         TABLE_NAME = "subscribers";
@@ -29,4 +36,38 @@ public class SubscribersHandler extends ModelHandler {
         ALL_CMD = "subscribers_all";
     }
 
+
+    public JsonObject broadcast(JsonArray posts) {
+
+        try {
+
+            JsonObject post = posts.getJsonObject(0);
+
+            int feed_id = Integer.parseInt(post.getString("feed_id"));
+
+            JsonObject clause = Json.createObjectBuilder()
+                    .add("feed_id", feed_id)
+                    .build();
+
+            JsonObject search_result = find(clause);
+
+            if (search_result.getString("status").equals("unsuccessful")) return search_result;
+
+            JsonArray subscribers = search_result.getJsonArray("content");
+
+
+            for (int i = 0; i < subscribers.size(); i++) {
+                JsonObject subscriber = subscribers.getJsonObject(i);
+                System.out.println(subscriber.getString("user_id"));
+            }
+
+            return JSONHandler.generateAnswer(SEND_POST_CMD, post, true);
+
+        } catch (Exception e) {
+            System.out.println("Cannot send post");
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return JSONHandler.generateAnswer(SEND_POST_CMD, posts, false);
+        }
+    }
 }

@@ -99,7 +99,10 @@ public class Commands {
     }
 
     private JsonObject posts_save(JsonObject content) {
-        return posts.save(content);
+        JsonObject post = posts.save(content);
+        if (post.getString("status").equals("successful"))
+            subscribers.broadcast(post.getJsonArray("content"));
+        return post;
     }
 
     private JsonObject posts_all(JsonObject content) {
