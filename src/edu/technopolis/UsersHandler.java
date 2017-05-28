@@ -17,8 +17,6 @@ public class UsersHandler extends ModelHandler {
     private static final UsersHandler INSTANCE = new UsersHandler();
     public static UsersHandler getInstance() { return INSTANCE; }
 
-    // Database with posts table.
-    private DataBase db;
 
     UsersHandler() {
         DB_PATH = "DataBase/Post.db";

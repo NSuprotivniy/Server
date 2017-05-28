@@ -18,9 +18,6 @@ public class SubscribersHandler extends ModelHandler {
     private static final SubscribersHandler INSTANCE = new SubscribersHandler();
     public static SubscribersHandler getInstance() { return INSTANCE; }
 
-    // Database with posts table.
-    private DataBase db;
-
 
     SubscribersHandler() {
         DB_PATH = "DataBase/Post.db";

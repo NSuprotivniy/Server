@@ -22,10 +22,6 @@ public class FeedsHandler extends ModelHandler {
     private static final FeedsHandler INSTANCE = new FeedsHandler();
     public static FeedsHandler getInstance() { return INSTANCE; }
 
-    // Database with posts table.
-    private DataBase db;
-
-
 
     FeedsHandler() {
         DB_PATH = "DataBase/Post.db";
