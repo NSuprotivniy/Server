@@ -17,11 +17,13 @@ public class WorkerThread implements Runnable {
     private String command;
     private SocketChannel sc;
     private PostsHandler postsHandler;
+    Session session;
 
     public WorkerThread(SocketChannel sc, String s){
         this.command=s;
         this.sc = sc;
         this.postsHandler = PostsHandler.getInstance();
+        this.session = Session.getInstance();
     }
 
     @Override
@@ -35,6 +37,26 @@ public class WorkerThread implements Runnable {
         JsonObject result = handleRequest(command, sc);
         System.out.println("res: "+ result);
 
+        String command = result.getString("cmd");
+        switch (command) {
+            case "respond":
+                result = result.getJsonObject("respond");
+                break;
+            case "exit":
+                close(sc);
+                return;
+            case "login":
+                int clientID = result.getInt("arg");
+                try {
+                    session.addClient(clientID, sc);
+                } catch (Session.SessionException e) {
+                    System.err.println("Client " + clientID + "double login");
+                    e.printStackTrace();
+                }
+                result = result.getJsonObject("respond");
+                break;
+        }
+
         String respond = result.toString() + "\n";
         ByteBuffer buf = ByteBuffer.allocate(respond.length()*4);
         CharBuffer cbuf = buf.asCharBuffer();
@@ -45,6 +67,14 @@ public class WorkerThread implements Runnable {
             System.out.println("wrote: " + sc.write(buf));
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void close(SocketChannel sc) {
+        try {
+            sc.close();
+        } catch (IOException e1) {
+            e1.printStackTrace();
         }
     }
 

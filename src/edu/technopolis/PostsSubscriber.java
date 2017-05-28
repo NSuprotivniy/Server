@@ -13,7 +13,6 @@ import java.nio.channels.SocketChannel;
  * Created by nsuprotivniy on 28.01.17.
  */
 public class PostsSubscriber {
-
     private SocketChannel socket;
     private PrintWriter out;
 
