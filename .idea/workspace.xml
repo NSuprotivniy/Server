@@ -2,14 +2,37 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1ab2e77d-a8ec-4927-bdae-699421d86126" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/dictionaries/nsuprotivniy.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DataBase/Post.db" afterPath="$PROJECT_DIR$/DataBase/Post.db" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Server/edu/technopolis/Commands.class" afterPath="$PROJECT_DIR$/out/production/Server/edu/technopolis/Commands.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Server/edu/technopolis/SubscribersHandler.class" afterPath="$PROJECT_DIR$/out/production/Server/edu/technopolis/SubscribersHandler.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/test/Server/edu/technopolis/TestCommands.class" afterPath="$PROJECT_DIR$/out/test/Server/edu/technopolis/TestCommands.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/javax.json-api-1.0.jar" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/production/Server/edu/technopolis/Session$SessionException.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/production/Server/edu/technopolis/Session.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/production/Server/edu/technopolis/WorkerThread.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/com_bluecatcode_junit_junit_4_12_extended_1_0_4.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/net_hamnaberg_json_immutable_json_javax_5_1_0.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/edu/technopolis/Session.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/edu/technopolis/WorkerThread.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/description.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/javax_json_javax_json_api_1_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/junit_junit_4_12.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/org_glassfish_javax_json_1_0_4.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/project-template.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Server/edu/technopolis/Server$ClientWaiter.class" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/.idea/libraries/org_xerial_sqlite_jdbc_3_16_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/org_xerial_sqlite_jdbc_3_18_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Server/edu/technopolis/Client$ServerListener.class" afterPath="$PROJECT_DIR$/out/production/Server/edu/technopolis/Client$ServerListener.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Server/edu/technopolis/DataBase.class" afterPath="$PROJECT_DIR$/out/production/Server/edu/technopolis/DataBase.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Server/edu/technopolis/Main.class" afterPath="$PROJECT_DIR$/out/production/Server/edu/technopolis/Main.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Server/edu/technopolis/PostsSubscriber.class" afterPath="$PROJECT_DIR$/out/production/Server/edu/technopolis/PostsSubscriber.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Server/edu/technopolis/Server.class" afterPath="$PROJECT_DIR$/out/production/Server/edu/technopolis/Server.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/test/Server/edu/technopolis/TestServer.class" afterPath="$PROJECT_DIR$/out/test/Server/edu/technopolis/TestServer.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/edu/technopolis/Commands.java" afterPath="$PROJECT_DIR$/src/edu/technopolis/Commands.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/edu/technopolis/TestCommands.java" afterPath="$PROJECT_DIR$/tests/edu/technopolis/TestCommands.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Server.iml" afterPath="$PROJECT_DIR$/Server.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/edu/technopolis/Client.java" afterPath="$PROJECT_DIR$/src/edu/technopolis/Client.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/edu/technopolis/DataBase.java" afterPath="$PROJECT_DIR$/src/edu/technopolis/DataBase.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/edu/technopolis/Main.java" afterPath="$PROJECT_DIR$/src/edu/technopolis/Main.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/edu/technopolis/PostsSubscriber.java" afterPath="$PROJECT_DIR$/src/edu/technopolis/PostsSubscriber.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/edu/technopolis/Server.java" afterPath="$PROJECT_DIR$/src/edu/technopolis/Server.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/edu/technopolis/TestServer.java" afterPath="$PROJECT_DIR$/tests/edu/technopolis/TestServer.java" />
     </list>
     <ignored path="Server.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -38,8 +61,8 @@
       <file leaf-file-name="Commands.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/edu/technopolis/Commands.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="432">
-              <caret line="63" column="5" lean-forward="true" selection-start-line="63" selection-start-column="5" selection-end-line="63" selection-end-column="5" />
+            <state relative-caret-position="1134">
+              <caret line="63" column="5" lean-forward="false" selection-start-line="63" selection-start-column="5" selection-end-line="63" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#3053#3054#0" expanded="true" />
@@ -72,8 +95,8 @@
       <file leaf-file-name="TestPostsHandler.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tests/edu/technopolis/TestPostsHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1080">
-              <caret line="109" column="9" lean-forward="true" selection-start-line="109" selection-start-column="9" selection-end-line="109" selection-end-column="9" />
+            <state relative-caret-position="1890">
+              <caret line="109" column="9" lean-forward="false" selection-start-line="109" selection-start-column="9" selection-end-line="109" selection-end-column="9" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -84,7 +107,7 @@
       <file leaf-file-name="DataBase.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/edu/technopolis/DataBase.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="612">
+            <state relative-caret-position="2232">
               <caret line="133" column="0" lean-forward="false" selection-start-line="133" selection-start-column="0" selection-end-line="133" selection-end-column="0" />
               <folding />
             </state>
@@ -94,8 +117,8 @@
       <file leaf-file-name="UsersHandler.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/edu/technopolis/UsersHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="36">
-              <caret line="4" column="3" lean-forward="true" selection-start-line="4" selection-start-column="3" selection-end-line="4" selection-end-column="3" />
+            <state relative-caret-position="72">
+              <caret line="4" column="3" lean-forward="false" selection-start-line="4" selection-start-column="3" selection-end-line="4" selection-end-column="3" />
               <folding />
             </state>
           </provider>
@@ -104,7 +127,7 @@
       <file leaf-file-name="SubscribersHandler.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/edu/technopolis/SubscribersHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="378">
+            <state relative-caret-position="1098">
               <caret line="66" column="12" lean-forward="false" selection-start-line="66" selection-start-column="12" selection-end-line="69" selection-end-column="75" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -116,7 +139,7 @@
       <file leaf-file-name="JSONHandler.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/edu/technopolis/JSONHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
+            <state relative-caret-position="504">
               <caret line="28" column="29" lean-forward="false" selection-start-line="28" selection-start-column="29" selection-end-line="28" selection-end-column="29" />
               <folding />
             </state>
@@ -126,8 +149,8 @@
       <file leaf-file-name="PostsSubscriber.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/edu/technopolis/PostsSubscriber.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="414">
-              <caret line="26" column="78" lean-forward="false" selection-start-line="26" selection-start-column="74" selection-end-line="26" selection-end-column="78" />
+            <state relative-caret-position="306">
+              <caret line="26" column="65" lean-forward="false" selection-start-line="26" selection-start-column="65" selection-end-line="26" selection-end-column="65" />
               <folding />
             </state>
           </provider>
@@ -136,8 +159,8 @@
       <file leaf-file-name="ModelHandler.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/edu/technopolis/ModelHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="324">
-              <caret line="85" column="10" lean-forward="true" selection-start-line="85" selection-start-column="10" selection-end-line="85" selection-end-column="10" />
+            <state relative-caret-position="1530">
+              <caret line="85" column="10" lean-forward="false" selection-start-line="85" selection-start-column="10" selection-end-line="85" selection-end-column="10" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2596#2597#0" expanded="true" />
@@ -151,11 +174,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PostsHandler.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/edu/technopolis/PostsHandler.java">
+      <file leaf-file-name="TestCommands.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tests/edu/technopolis/TestCommands.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-256">
-              <caret line="19" column="40" lean-forward="true" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="40" />
+            <state relative-caret-position="468">
+              <caret line="97" column="0" lean-forward="false" selection-start-line="97" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -163,11 +186,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TestCommands.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/tests/edu/technopolis/TestCommands.java">
+      <file leaf-file-name="Server.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/edu/technopolis/Server.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1498">
-              <caret line="97" column="0" lean-forward="true" selection-start-line="97" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
+            <state relative-caret-position="-788">
+              <caret line="23" column="13" lean-forward="false" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -239,6 +262,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -289,7 +313,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="Scratches" />
     </panes>
@@ -700,7 +723,6 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32884902" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
@@ -708,7 +730,6 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.49327356" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32884902" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329429" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -724,7 +745,9 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24963397" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32884902" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329429" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32884902" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -1089,9 +1112,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2209">
           <caret line="168" column="0" lean-forward="false" selection-start-line="168" selection-start-column="0" selection-end-line="168" selection-end-column="0" />
-          <folding>
-            <element signature="e#5338#5339#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1099,26 +1119,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="252">
           <caret line="14" column="3" lean-forward="true" selection-start-line="14" selection-start-column="3" selection-end-line="14" selection-end-column="3" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/edu/technopolis/Server.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="140" column="17" lean-forward="true" selection-start-line="140" selection-start-column="17" selection-end-line="140" selection-end-column="17" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/edu/technopolis/PostsHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-256">
-          <caret line="19" column="40" lean-forward="true" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="40" />
+        <state relative-caret-position="342">
+          <caret line="19" column="40" lean-forward="false" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="40" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1127,16 +1134,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/edu/technopolis/UsersHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="4" column="3" lean-forward="true" selection-start-line="4" selection-start-column="3" selection-end-line="4" selection-end-column="3" />
+        <state relative-caret-position="72">
+          <caret line="4" column="3" lean-forward="false" selection-start-line="4" selection-start-column="3" selection-end-line="4" selection-end-column="3" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/tests/edu/technopolis/TestPostsHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1080">
-          <caret line="109" column="9" lean-forward="true" selection-start-line="109" selection-start-column="9" selection-end-line="109" selection-end-column="9" />
+        <state relative-caret-position="1890">
+          <caret line="109" column="9" lean-forward="false" selection-start-line="109" selection-start-column="9" selection-end-line="109" selection-end-column="9" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1145,15 +1152,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/edu/technopolis/PostsSubscriber.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="26" column="78" lean-forward="false" selection-start-line="26" selection-start-column="74" selection-end-line="26" selection-end-column="78" />
+        <state relative-caret-position="306">
+          <caret line="26" column="65" lean-forward="false" selection-start-line="26" selection-start-column="65" selection-end-line="26" selection-end-column="65" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/edu/technopolis/SubscribersHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
+        <state relative-caret-position="1098">
           <caret line="66" column="12" lean-forward="false" selection-start-line="66" selection-start-column="12" selection-end-line="69" selection-end-column="75" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -1163,7 +1170,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/edu/technopolis/DataBase.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
+        <state relative-caret-position="2232">
           <caret line="133" column="0" lean-forward="false" selection-start-line="133" selection-start-column="0" selection-end-line="133" selection-end-column="0" />
           <folding />
         </state>
@@ -1171,8 +1178,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/edu/technopolis/ModelHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="85" column="10" lean-forward="true" selection-start-line="85" selection-start-column="10" selection-end-line="85" selection-end-column="10" />
+        <state relative-caret-position="1530">
+          <caret line="85" column="10" lean-forward="false" selection-start-line="85" selection-start-column="10" selection-end-line="85" selection-end-column="10" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#2596#2597#0" expanded="true" />
@@ -1187,7 +1194,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/edu/technopolis/JSONHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
+        <state relative-caret-position="504">
           <caret line="28" column="29" lean-forward="false" selection-start-line="28" selection-start-column="29" selection-end-line="28" selection-end-column="29" />
           <folding />
         </state>
@@ -1195,8 +1202,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/edu/technopolis/Commands.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="63" column="5" lean-forward="true" selection-start-line="63" selection-start-column="5" selection-end-line="63" selection-end-column="5" />
+        <state relative-caret-position="1134">
+          <caret line="63" column="5" lean-forward="false" selection-start-line="63" selection-start-column="5" selection-end-line="63" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#3053#3054#0" expanded="true" />
@@ -1227,8 +1234,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tests/edu/technopolis/TestCommands.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1498">
-          <caret line="97" column="0" lean-forward="true" selection-start-line="97" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
+        <state relative-caret-position="468">
+          <caret line="97" column="0" lean-forward="false" selection-start-line="97" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/edu/technopolis/Server.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-788">
+          <caret line="23" column="13" lean-forward="false" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

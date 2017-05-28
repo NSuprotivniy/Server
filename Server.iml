@@ -8,9 +8,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="javax.json:javax.json-api:1.0" level="project" />
-    <orderEntry type="library" name="org.glassfish:javax.json:1.0.4" level="project" />
-    <orderEntry type="library" name="org.xerial:sqlite-jdbc:3.16.1" level="project" />
-    <orderEntry type="library" name="junit:junit:4.12" level="project" />
+    <orderEntry type="library" name="org.xerial:sqlite-jdbc:3.18.0" level="project" />
+    <orderEntry type="library" name="com.bluecatcode.junit:junit-4.12-extended:1.0.4" level="project" />
+    <orderEntry type="library" name="net.hamnaberg.json:immutable-json-javax:5.1.0" level="project" />
   </component>
 </module>

@@ -114,6 +114,7 @@ public class DataBase {
 
         fields.delete(fields.length() - 2, fields.length() - 1);
         values.delete(values.length() - 2, values.length() - 1);
+
         fields.append(")");
         values.append(")");
 
@@ -175,13 +176,49 @@ public class DataBase {
 
         JsonArray result = ResultSetToJsonArray(resultSet);
 
-        System.out.println("Record found");
+        if(result.size() == 0)
+            throw new SQLException("Records bot found");
 
         resultSet.close();
         statement.close();
         //statement.execute("SELECT * FROM posts WHERE author='Noname'");
 
         return result;
+    }
+
+    // Remove records
+    public void remove(JsonObject remove_params) throws ClassNotFoundException, SQLException
+    {
+        String table = remove_params.getString("table");
+        StringBuilder clause = new StringBuilder();
+        remove_params = remove_params.getJsonObject("clause");
+
+        if (!remove_params.isEmpty()) {
+            remove_params.forEach((field, value) -> {
+                clause.append(field + "=" + value + " AND ");
+            });
+            clause.delete(clause.length() - 5, clause.length() - 1);
+        }
+
+        String clauseStr = clause.toString();
+
+        StringBuilder query = new StringBuilder();
+
+        query.append("DELETE FROM " + table + " ");
+
+        if (!clauseStr.isEmpty()) {
+            query.append("WHERE ");
+            query.append(clauseStr);
+        }
+
+        System.out.println(query.toString());
+
+        Statement statement = connection.createStatement();
+        statement.execute(query.toString());
+
+        statement.close();
+        //statement.execute("SELECT * FROM posts WHERE author='Noname'");
+
     }
 
     // Records searching
@@ -199,6 +236,27 @@ public class DataBase {
         }
 
         return where(table, clause.toString());
+    }
+
+    // get record
+    public JsonObject get(JsonObject search_params) throws ClassNotFoundException, SQLException
+    {
+        String table = search_params.getString("table");
+        StringBuilder clause = new StringBuilder();
+        search_params = search_params.getJsonObject("clause");
+
+        if (!search_params.isEmpty()) {
+            search_params.forEach((field, value) -> {
+                clause.append(field + "=" + value + " AND ");
+            });
+            clause.delete(clause.length() - 5, clause.length() - 1);
+        }
+
+        JsonArray array = where(table, clause.toString());
+        if(array.size() == 0)
+            throw new SQLException();
+
+        return array.getJsonObject(0);
     }
 
     // Remove all records
@@ -237,9 +295,7 @@ public class DataBase {
     }
 
     public static void main(String[] args) {
-
         try {
-
             JsonObject fields = Json.createObjectBuilder()
                     .add("title", "VARCHAR(255)")
                     .add("author", "VARCHAR(255)")
@@ -263,21 +319,29 @@ public class DataBase {
                     .build();
             db.save(record);
 
+            content = Json.createObjectBuilder()
+                    .add("title", "Lorem Ipsum")
+                    .add("author", "Vasia")
+                    .add("body", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit.")
+                    .build();
+            record = Json.createObjectBuilder()
+                    .add("table", "posts")
+                    .add("content", content)
+                    .build();
+            db.save(record);
+
 
             JsonObject clause = Json.createObjectBuilder()
-                    .add("author", "Noname")
+                    .add("author", "Marcus Tullius Cicero")
                     .build();
             JsonObject query = Json.createObjectBuilder()
                     .add("table", "posts")
                     .add("clause", clause)
                     .build();
 
-            JsonArray result = db.find(query);
-
-            for (JsonValue row : result) {
-                System.out.println(row);
-            }
-
+            //db.remove(query);
+            JsonObject result = db.get(query);
+            System.out.println(result);
 
             db.close();
 
