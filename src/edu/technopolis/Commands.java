@@ -16,6 +16,7 @@ public class Commands {
     private FeedsHandler feeds;
     private SubscribersHandler subscribers;
     private UsersHandler users;
+    private Session session;
 
 
     Commands() {
@@ -23,27 +24,31 @@ public class Commands {
         feeds = new FeedsHandler();
         subscribers = new SubscribersHandler();
         users = new UsersHandler();
+        session = Session.getInstance();
     }
     
     public JsonObject handle(JsonObject command) {
 
         String command_name = command.getString("cmd");
         JsonObject content = command.getJsonObject("content");
-        JsonObject result;
+
+        if(login_validate(command) == false) {
+            return JSONHandler.generateAnswer("authorize error", Json.createObjectBuilder().build(), false);
+        }
 
         switch (command_name) {
 
+            case "login": return serverCommandLogin(command);
 
             case "subscribers_save": return serverCommandSend(subscribers_save(content));
             case "subscribers_find": return serverCommandSend(subscribers_find(content));
             case "subscribers_all":  return serverCommandSend(subscribers_all(content));
 
-
             case "feeds_save": return serverCommandSend(feeds_save(content));
             case "feeds_find": return serverCommandSend(feeds_find(content));
             case "feeds_all":  return serverCommandSend(feeds_all(content));
 
-            case "users_save": return serverCommandLogin(users_save(content));
+            case "users_save": return serverCommandSend(users_save(content));
             case "users_find": return serverCommandSend(users_find(content));
             case "users_all":  return serverCommandSend(users_all(content));
 
@@ -63,6 +68,25 @@ public class Commands {
 
     }
 
+    private boolean login_validate(JsonObject command) {
+
+        if (command.getString("cmd").equals("login")) return true;
+
+        int client_id = command.getInt("client_id");
+
+        System.out.println("Validation " + client_id);
+
+        try {
+            session.getClientSocket(client_id);
+        } catch (Session.SessionException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
     private JsonObject serverCommandSend(JsonObject result) {
         JsonObject worker_task = Json.createObjectBuilder()
                 .add("cmd", "respond")
@@ -72,24 +96,38 @@ public class Commands {
         return worker_task;
     }
 
-    private JsonObject serverCommandLogin(JsonObject result) {
+    private JsonObject serverCommandLogin(JsonObject command) {
 
         try {
-            JsonObject user = result.getJsonArray("content").getJsonObject(0);
-            int client_id = Integer.parseInt(user.getString("id"));
 
-            JsonObject worker_task = Json.createObjectBuilder()
+            JsonObject content = command.getJsonObject("content");
+
+            JsonObject find_result = users.find(content);
+
+            JsonObject user;
+
+            if (find_result.getString("status").equals("successful")) {
+                user = find_result.getJsonArray("content").getJsonObject(0);
+            } else {
+                JsonObject save_result = users.save(content);
+                user = save_result.getJsonArray("content").getJsonObject(0);
+            }
+
+
+            return Json.createObjectBuilder()
                     .add("cmd", "login")
-                    .add("arg", client_id)
-                    .add("respond", result)
+                    .add("arg", Integer.parseInt(user.getString("id")))
+                    .add("respond", JSONHandler.generateAnswer("login", user, true))
                     .build();
-
-            return worker_task;
         } catch (Exception e) {
-            System.out.println("Cannot login user");
+
             System.out.println(e.getMessage());
             e.printStackTrace();
-            return JSONHandler.generateAnswer("users_login", result, false);
+
+            return Json.createObjectBuilder()
+                .add("cmd", "respond")
+                .add("respond", JSONHandler.generateAnswer("login", command, false))
+                .build();
         }
 
     }

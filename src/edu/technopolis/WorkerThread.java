@@ -49,6 +49,7 @@ public class WorkerThread implements Runnable {
                 int clientID = result.getInt("arg");
                 try {
                     session.addClient(clientID, sc);
+                    System.out.println("Login " + clientID + " successful");
                 } catch (Session.SessionException e) {
                     System.err.println("Client " + clientID + "double login");
                     e.printStackTrace();
@@ -59,9 +60,8 @@ public class WorkerThread implements Runnable {
 
         String respond = result.toString() + "\n";
         ByteBuffer buf = ByteBuffer.allocate(respond.length()*4);
-        CharBuffer cbuf = buf.asCharBuffer();
-        cbuf.put(respond);
-        cbuf.flip();
+        buf.put(respond.getBytes());
+        buf.flip();
 
         try {
             System.out.println("wrote: " + sc.write(buf));
@@ -97,24 +97,9 @@ public class WorkerThread implements Runnable {
         }
 
         try {
-            String command = commandJSON.getString("cmd");
 
-            switch (command) {
-                case "exit":
-                    return null;
-                case "subscribe_posts":
-                    return subscribePosts(client);
-                case "find_posts":
-                    return postsHandler.find(commandJSON.getJsonObject("content"));
-                case "get_all_posts":
-                    return postsHandler.getAll();
-                case "getLastPosts":
-                    return postsHandler.getLastPosts(commandJSON.getJsonObject("content"));
-                case "save_post":
-                    return postsHandler.save(commandJSON.getJsonObject("content"));
-                default:
-                    return JSONHandler.generateAnswer(command, Json.createObjectBuilder().build(), false);
-            }
+            Commands commands = new Commands();
+            return commands.handle(commandJSON);
 
 
         } catch (Exception e) {
@@ -125,16 +110,4 @@ public class WorkerThread implements Runnable {
         }
     }
 
-    private JsonObject subscribePosts(SocketChannel client) {
-        try {
-            PostsSubscriber subscriber = new PostsSubscriber(client);
-            postsHandler.addSubscriber(subscriber);
-            return JSONHandler.generateAnswer("subscribe_posts", Json.createObjectBuilder().build(), true);
-        } catch (Exception e) {
-            System.out.println("Can't create subscriber");
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-            return JSONHandler.generateAnswer("subscribe_posts", Json.createObjectBuilder().build(), false);
-        }
-    }
 }

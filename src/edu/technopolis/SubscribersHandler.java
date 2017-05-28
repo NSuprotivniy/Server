@@ -1,11 +1,11 @@
 package edu.technopolis;
 
-import org.sqlite.core.DB;
-
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
-import javax.json.JsonValue;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 
 /**
  * Created by nsuprotivniy on 28.05.17.
@@ -25,6 +25,7 @@ public class SubscribersHandler extends ModelHandler {
 
 
     String SEND_POST_CMD = "subscribers_send_post";
+    Session session;
 
     SubscribersHandler() {
         DB_PATH = "DataBase/Post.db";
@@ -34,6 +35,7 @@ public class SubscribersHandler extends ModelHandler {
         SAVE_CMD = "subscribers_save";
         GET_CMD = "subscribers_get";
         ALL_CMD = "subscribers_all";
+        session = Session.getInstance();
     }
 
 
@@ -56,9 +58,19 @@ public class SubscribersHandler extends ModelHandler {
             JsonArray subscribers = search_result.getJsonArray("content");
 
 
+
             for (int i = 0; i < subscribers.size(); i++) {
+
                 JsonObject subscriber = subscribers.getJsonObject(i);
-                System.out.println(subscriber.getString("user_id"));
+                int client_id = Integer.parseInt(subscriber.getString("user_id"));
+
+                try {
+                    SocketChannel socket = session.getClientSocket(client_id);
+                    sendToClient(socket, post);
+                } catch (Session.SessionException e) {
+                    System.out.println("No socket for " + client_id);
+                }
+
             }
 
             return JSONHandler.generateAnswer(SEND_POST_CMD, post, true);
@@ -69,5 +81,17 @@ public class SubscribersHandler extends ModelHandler {
             e.printStackTrace();
             return JSONHandler.generateAnswer(SEND_POST_CMD, posts, false);
         }
+    }
+
+    private void sendToClient(SocketChannel socket, JsonObject post) throws IOException {
+
+        JsonObject message = JSONHandler.generateAnswer("new_post", post, true);
+
+        String respond = message.toString() + "\n";
+
+        ByteBuffer buf = ByteBuffer.allocate(respond.length()*4);
+        buf.put(respond.getBytes());
+        buf.flip();
+        socket.write(buf);
     }
 }

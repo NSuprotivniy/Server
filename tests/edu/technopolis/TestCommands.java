@@ -11,6 +11,10 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import java.util.Random;
 
+/**
+ * IT TESTS OLD IMPLEMENTATION. THE TEST IS NOT WORKING.
+ */
+
 
 public class TestCommands {
 
